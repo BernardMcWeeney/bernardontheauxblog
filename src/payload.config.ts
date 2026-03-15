@@ -10,6 +10,11 @@ import { r2Storage } from '@payloadcms/storage-r2'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Reviews } from './collections/Reviews'
+import { Gigs } from './collections/Gigs'
+import { DeepDives } from './collections/DeepDives'
+import { Playlists } from './collections/Playlists'
+import { Notes } from './collections/Notes'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -49,8 +54,16 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    livePreview: {
+      collections: ['reviews', 'gigs', 'deep-dives', 'playlists', 'notes'],
+      breakpoints: [
+        { label: 'Mobile', name: 'mobile', width: 375, height: 667 },
+        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+      ],
+    },
   },
-  collections: [Users, Media],
+  collections: [Users, Media, Reviews, Gigs, DeepDives, Playlists, Notes],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

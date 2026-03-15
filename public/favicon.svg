@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- outer disc -->
+  <circle cx="64" cy="64" r="60" fill="#111"/>
+  <!-- grooves -->
+  <circle cx="64" cy="64" r="50" fill="none" stroke="#222" stroke-width="0.8"/>
+  <circle cx="64" cy="64" r="44" fill="none" stroke="#222" stroke-width="0.8"/>
+  <circle cx="64" cy="64" r="38" fill="none" stroke="#222" stroke-width="0.8"/>
+  <!-- accent ring -->
+  <circle cx="64" cy="64" r="32" fill="none" stroke="#c41230" stroke-width="1.5"/>
+  <!-- label area -->
+  <circle cx="64" cy="64" r="22" fill="#c41230"/>
+  <!-- center hole -->
+  <circle cx="64" cy="64" r="4" fill="#111"/>
+  <!-- B letter -->
+  <text x="64" y="72" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="28" fill="#fff">B</text>
+  <!-- spindle highlight -->
+  <circle cx="64" cy="64" r="2" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+</svg>

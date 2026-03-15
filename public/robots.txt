@@ -1,0 +1,44 @@
+# All crawlers welcome
+User-agent: *
+Allow: /
+
+# AI Crawlers — explicitly welcomed
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Spotify
+User-agent: Spotify
+Allow: /
+
+Sitemap: https://bernardontheaux.com/sitemap-index.xml
+
+# LLM content index
+# See https://bernardontheaux.com/llms.txt for site overview
+# See https://bernardontheaux.com/llms-full.txt for full content index

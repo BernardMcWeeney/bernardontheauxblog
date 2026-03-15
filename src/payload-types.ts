@@ -69,6 +69,11 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    reviews: Review;
+    gigs: Gig;
+    'deep-dives': DeepDive;
+    playlists: Playlist;
+    notes: Note;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +83,11 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    reviews: ReviewsSelect<false> | ReviewsSelect<true>;
+    gigs: GigsSelect<false> | GigsSelect<true>;
+    'deep-dives': DeepDivesSelect<false> | DeepDivesSelect<true>;
+    playlists: PlaylistsSelect<false> | PlaylistsSelect<true>;
+    notes: NotesSelect<false> | NotesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -158,6 +168,193 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews".
+ */
+export interface Review {
+  id: number;
+  title: string;
+  slug: string;
+  reviewType?: ('album' | 'gig' | 'artist' | 'single' | 'ep' | 'film' | 'other') | null;
+  artist?: string | null;
+  reviewDate: string;
+  listenedOn?: string | null;
+  rating: number;
+  format?: ('Vinyl' | 'CD' | 'Digital' | 'Stream' | 'Cassette' | 'Other') | null;
+  label?: string | null;
+  releaseYear?: number | null;
+  standoutTracks?: string | null;
+  venue?: string | null;
+  city?: string | null;
+  eventDate?: string | null;
+  tags?: string[] | null;
+  cover?: (number | null) | Media;
+  excerpt?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  published?: boolean | null;
+  featured?: boolean | null;
+  pinned?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gigs".
+ */
+export interface Gig {
+  id: number;
+  title: string;
+  slug: string;
+  artist: string;
+  venue: string;
+  city: string;
+  eventDate: string;
+  tour?: string | null;
+  support?: string | null;
+  highlights?: string | null;
+  tags?: string[] | null;
+  cover?: (number | null) | Media;
+  excerpt?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  published?: boolean | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "deep-dives".
+ */
+export interface DeepDive {
+  id: number;
+  title: string;
+  slug: string;
+  publishedOn: string;
+  topic?: string | null;
+  era?: string | null;
+  tags?: string[] | null;
+  cover?: (number | null) | Media;
+  excerpt?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  published?: boolean | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "playlists".
+ */
+export interface Playlist {
+  id: number;
+  title: string;
+  slug: string;
+  publishedOn: string;
+  platform: 'Spotify' | 'Apple Music' | 'YouTube' | 'Tidal' | 'Bandcamp' | 'Other';
+  playlistUrl: string;
+  embedUrl?: string | null;
+  mood?: string | null;
+  duration?: number | null;
+  tags?: string[] | null;
+  cover?: (number | null) | Media;
+  excerpt?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  published?: boolean | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notes".
+ */
+export interface Note {
+  id: number;
+  title: string;
+  slug: string;
+  listenedOn: string;
+  artist?: string | null;
+  source?: string | null;
+  tags?: string[] | null;
+  cover?: (number | null) | Media;
+  excerpt?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  published?: boolean | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -187,6 +384,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'reviews';
+        value: number | Review;
+      } | null)
+    | ({
+        relationTo: 'gigs';
+        value: number | Gig;
+      } | null)
+    | ({
+        relationTo: 'deep-dives';
+        value: number | DeepDive;
+      } | null)
+    | ({
+        relationTo: 'playlists';
+        value: number | Playlist;
+      } | null)
+    | ({
+        relationTo: 'notes';
+        value: number | Note;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -267,6 +484,118 @@ export interface MediaSelect<T extends boolean = true> {
   filesize?: T;
   width?: T;
   height?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews_select".
+ */
+export interface ReviewsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  reviewType?: T;
+  artist?: T;
+  reviewDate?: T;
+  listenedOn?: T;
+  rating?: T;
+  format?: T;
+  label?: T;
+  releaseYear?: T;
+  standoutTracks?: T;
+  venue?: T;
+  city?: T;
+  eventDate?: T;
+  tags?: T;
+  cover?: T;
+  excerpt?: T;
+  content?: T;
+  published?: T;
+  featured?: T;
+  pinned?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gigs_select".
+ */
+export interface GigsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  artist?: T;
+  venue?: T;
+  city?: T;
+  eventDate?: T;
+  tour?: T;
+  support?: T;
+  highlights?: T;
+  tags?: T;
+  cover?: T;
+  excerpt?: T;
+  content?: T;
+  published?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "deep-dives_select".
+ */
+export interface DeepDivesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  publishedOn?: T;
+  topic?: T;
+  era?: T;
+  tags?: T;
+  cover?: T;
+  excerpt?: T;
+  content?: T;
+  published?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "playlists_select".
+ */
+export interface PlaylistsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  publishedOn?: T;
+  platform?: T;
+  playlistUrl?: T;
+  embedUrl?: T;
+  mood?: T;
+  duration?: T;
+  tags?: T;
+  cover?: T;
+  excerpt?: T;
+  content?: T;
+  published?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notes_select".
+ */
+export interface NotesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  listenedOn?: T;
+  artist?: T;
+  source?: T;
+  tags?: T;
+  cover?: T;
+  excerpt?: T;
+  content?: T;
+  published?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
