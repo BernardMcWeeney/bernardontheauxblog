@@ -1,5 +1,7 @@
 import React from 'react'
 import './styles.css'
+
+export const dynamic = 'force-dynamic'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
