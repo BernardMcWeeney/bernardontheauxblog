@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
@@ -173,7 +174,7 @@ export default async function ReviewDetailPage({
           <div className="album-hero">
             <div className="album-hero-art">
               {coverUrl ? (
-                <img src={coverUrl} alt={coverAlt} />
+                <Image src={coverUrl} alt={coverAlt} fill sizes="300px" style={{ objectFit: 'cover' }} />
               ) : (
                 <div className="album-hero-art-placeholder">
                   <Icon name="vinyl" size={56} />

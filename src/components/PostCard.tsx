@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Icon from './Icon';
 
 interface PayloadMedia {
@@ -99,7 +100,7 @@ export default function PostCard({
       <a className="card-link" href={href}>
         <div className={mediaClasses}>
           {coverUrl ? (
-            <img src={coverUrl} alt={coverAlt || ''} loading="lazy" />
+            <Image src={coverUrl} alt={coverAlt || ''} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: 'cover' }} />
           ) : (
             <div className="card-placeholder">
               <Icon name={resolvedIcon as any} size={48} className="placeholder-icon" />

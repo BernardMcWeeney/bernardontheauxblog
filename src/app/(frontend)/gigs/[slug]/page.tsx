@@ -1,5 +1,6 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
@@ -71,7 +72,7 @@ export default async function GigDetailPage({
         {/* Banner */}
         <div className="post-banner">
           {coverUrl ? (
-            <img src={coverUrl} alt="" />
+            <Image src={coverUrl} alt="" fill sizes="100vw" style={{ objectFit: 'cover' }} />
           ) : (
             <div className="post-banner-placeholder">
               <Icon name="gig" size={56} />

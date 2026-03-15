@@ -813,6 +813,7 @@ p { margin: 0 0 1rem; }
 .post-back:hover { color: var(--accent); }
 
 .post-banner {
+  position: relative;
   width: 100%;
   height: 340px;
   border-radius: var(--radius-lg);
@@ -853,6 +854,7 @@ p { margin: 0 0 1rem; }
 }
 
 .album-hero-art {
+  position: relative;
   aspect-ratio: 1 / 1;
   background: var(--bg-alt);
   overflow: hidden;

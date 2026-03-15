@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import Image from 'next/image';
 import Icon from './Icon';
 
 interface HeroSlide {
@@ -69,7 +70,7 @@ export default function HeroSlider({ posts }: HeroSliderProps) {
               <a className="hero-slide-link" href={post.href}>
                 <div className="hero-slide-media">
                   {post.cover ? (
-                    <img src={post.cover} alt="" loading="lazy" />
+                    <Image src={post.cover} alt="" fill sizes="100vw" style={{ objectFit: 'cover' }} />
                   ) : (
                     <div className="hero-slide-placeholder">
                       <Icon name={post.icon as any} size={56} />

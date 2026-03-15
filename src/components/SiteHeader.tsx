@@ -71,10 +71,11 @@ export default function SiteHeader() {
 
         <nav id="main-nav" className={`nav ${open ? 'open' : ''}`}>
           {navItems.map((item) => {
+            const normalizedPath = pathname.endsWith('/') ? pathname : pathname + '/';
             const isActive =
               item.href === '/'
                 ? pathname === '/'
-                : pathname.startsWith(item.href);
+                : normalizedPath.startsWith(item.href);
 
             return (
               <Link
