@@ -1,5 +1,6 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { RichText } from '@payloadcms/richtext-lexical/react'
@@ -56,9 +57,9 @@ export default async function NoteDetailPage({
     <div className="container">
       <div className="post-layout" style={{ maxWidth: '700px' }}>
         {/* Back link */}
-        <a href="/notes/" className="post-back">
+        <Link href="/notes/" className="post-back">
           &larr; Back to Notes
-        </a>
+        </Link>
 
         {/* No banner, no sidebar for notes */}
 

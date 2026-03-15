@@ -40,15 +40,15 @@ export default function ContactPage() {
           </p>
 
           <p>
-            I read everything, though responses might take a few days. If you're sending a
+            I read everything, though responses might take a few days. If you&apos;re sending a
             recommendation, a few sentences about why you think the record is worth hearing goes a
             long way.
           </p>
 
-          <h2>What I'm not looking for</h2>
+          <h2>What I&apos;m not looking for</h2>
           <ul>
             <li>Press releases or promotional blasts</li>
-            <li>Requests to "feature" or "review" in exchange for payment</li>
+            <li>Requests to &quot;feature&quot; or &quot;review&quot; in exchange for payment</li>
             <li>SEO link exchange offers</li>
           </ul>
 

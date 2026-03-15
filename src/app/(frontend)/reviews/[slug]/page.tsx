@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -164,9 +165,9 @@ export default async function ReviewDetailPage({
       <div className="container">
         <div className="post-layout">
           {/* Back link */}
-          <a href="/reviews/" className="post-back">
+          <Link href="/reviews/" className="post-back">
             &larr; Back to Reviews
-          </a>
+          </Link>
 
           {/* Album hero */}
           <div className="album-hero">

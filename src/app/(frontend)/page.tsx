@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import HeroSlider from '@/components/HeroSlider'
@@ -369,9 +370,9 @@ export default async function HomePage() {
               Full-album listening notes for new releases and older records worth another spin.
             </p>
           </div>
-          <a className="button ghost" href="/reviews/">
+          <Link className="button ghost" href="/reviews/">
             All Reviews
-          </a>
+          </Link>
         </div>
         <div className="grid">
           {latestReviews.map((entry: any) => (

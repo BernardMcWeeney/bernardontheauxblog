@@ -1,5 +1,6 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { RichText } from '@payloadcms/richtext-lexical/react'
@@ -71,9 +72,9 @@ export default async function DeepDiveDetailPage({
     <div className="container">
       <div className="post-layout">
         {/* Back link */}
-        <a href="/deep-dives/" className="post-back">
+        <Link href="/deep-dives/" className="post-back">
           &larr; Back to Deep Dives
-        </a>
+        </Link>
 
         {/* Banner */}
         <div className="post-banner">

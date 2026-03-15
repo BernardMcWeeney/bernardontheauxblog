@@ -1,5 +1,6 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { RichText } from '@payloadcms/richtext-lexical/react'
@@ -63,9 +64,9 @@ export default async function GigDetailPage({
     <div className="container">
       <div className="post-layout">
         {/* Back link */}
-        <a href="/gigs/" className="post-back">
+        <Link href="/gigs/" className="post-back">
           &larr; Back to Gigs
-        </a>
+        </Link>
 
         {/* Banner */}
         <div className="post-banner">

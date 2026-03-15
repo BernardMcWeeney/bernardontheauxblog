@@ -22,7 +22,7 @@ export default function AboutPage() {
             coverage.
           </p>
 
-          <h2>What you'll find here</h2>
+          <h2>What you&apos;ll find here</h2>
           <ul>
             <li>
               <strong>Album reviews</strong> — Full-album listening notes for new releases and older
@@ -46,8 +46,8 @@ export default function AboutPage() {
 
           <h2>The approach</h2>
           <p>
-            This isn't a news site. There's no race to be first, no algorithm to feed, no content
-            calendar to meet. The goal is simple: listen properly, then write about it when there's
+            This isn&apos;t a news site. There&apos;s no race to be first, no algorithm to feed, no content
+            calendar to meet. The goal is simple: listen properly, then write about it when there&apos;s
             something worth saying.
           </p>
 
@@ -57,7 +57,7 @@ export default function AboutPage() {
             in a listening session, and why it might be worth your time.
           </p>
 
-          <h2>Who's behind this</h2>
+          <h2>Who&apos;s behind this</h2>
           <p>
             Bernard. A listener, not a critic. Someone who prefers full albums over playlists, small
             venues over festivals, and context over hot takes.

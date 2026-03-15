@@ -54,8 +54,8 @@ export default function PrivacyPage() {
 
           <h2>Contact information</h2>
           <p>
-            If you email me via the contact page, I'll receive your email address and any information
-            you choose to include. I don't share email addresses with anyone or add them to any
+            If you email me via the contact page, I&apos;ll receive your email address and any information
+            you choose to include. I don&apos;t share email addresses with anyone or add them to any
             mailing list without explicit consent.
           </p>
 
@@ -68,15 +68,15 @@ export default function PrivacyPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Cloudflare's privacy policy
+              Cloudflare&apos;s privacy policy
             </a>{' '}
             for details.
           </p>
 
           <h2>Changes to this policy</h2>
           <p>
-            If this privacy policy changes, the updated version will be posted here with a new "last
-            updated" date.
+            If this privacy policy changes, the updated version will be posted here with a new &quot;last
+            updated&quot; date.
           </p>
 
           <h2>Questions</h2>
