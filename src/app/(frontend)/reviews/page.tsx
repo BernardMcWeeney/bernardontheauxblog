@@ -2,8 +2,8 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import Icon from '@/components/Icon'
 import PostCard from '@/components/PostCard'
-import { formatDate, formatRating } from '@/utils/format'
-import { getArtistName, getDisplayTitle } from '@/utils/artist'
+import { formatDate } from '@/utils/format'
+import { getDisplayTitle } from '@/utils/artist'
 import { ReviewFilters } from './ReviewsClient'
 
 const typeLabels: Record<string, string> = {

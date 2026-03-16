@@ -3,7 +3,7 @@ import configPromise from '@payload-config'
 import Icon from '@/components/Icon'
 import PostCard from '@/components/PostCard'
 import { formatDate } from '@/utils/format'
-import { getArtistName, getDisplayTitle } from '@/utils/artist'
+import { getDisplayTitle } from '@/utils/artist'
 import { GigFilters } from './GigsClient'
 
 export const metadata = {

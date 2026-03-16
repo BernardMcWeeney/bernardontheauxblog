@@ -10,12 +10,6 @@ export const metadata: Metadata = {
   description: 'Browse the full archive of reviews, gigs, deep dives, playlists, and notes.',
 }
 
-function getCoverUrl(cover: any): string | undefined {
-  if (!cover) return undefined
-  if (typeof cover === 'string') return cover
-  return cover.url || undefined
-}
-
 const PILL_CLASS: Record<string, string> = {
   reviews: 'pill-review',
   gigs: 'pill-gig',
