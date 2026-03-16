@@ -48,10 +48,17 @@ const cloudflareLogger = {
   silent: () => {},
 } as any // Use PayloadLogger type when it's exported
 
+// CF_PAGES is set during Cloudflare Pages builds (not at runtime).
+// During build, getCloudflareContext tries to connect to edge-preview which can 504 timeout.
+// Use wrangler's local proxy instead during the build phase.
+const isCFPagesBuild = process.env.CF_PAGES === '1'
+
 const cloudflare =
   isCLI || !isProduction
     ? await getCloudflareContextFromWrangler()
-    : await getCloudflareContext({ async: true })
+    : isCFPagesBuild
+      ? await getCloudflareContextFromWrangler(false)
+      : await getCloudflareContext({ async: true })
 
 export default buildConfig({
   admin: {
@@ -132,12 +139,12 @@ export default buildConfig({
 })
 
 // Adapted from https://github.com/opennextjs/opennextjs-cloudflare/blob/d00b3a13e42e65aad76fba41774815726422cc39/packages/cloudflare/src/api/cloudflare-context.ts#L328C36-L328C46
-function getCloudflareContextFromWrangler(): Promise<CloudflareContext> {
+function getCloudflareContextFromWrangler(remoteBindings?: boolean): Promise<CloudflareContext> {
   return import(/* webpackIgnore: true */ `${'__wrangler'.replaceAll('_', '')}`).then(
     ({ getPlatformProxy }) =>
       getPlatformProxy({
         environment: process.env.CLOUDFLARE_ENV,
-        remoteBindings: isProduction,
+        remoteBindings: remoteBindings ?? isProduction,
       } satisfies GetPlatformProxyOptions),
   )
 }
