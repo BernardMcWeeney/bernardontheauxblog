@@ -12,7 +12,10 @@ type IconName =
   | 'turntable' | 'record-player'
   | 'home' | 'music'
   | 'menu'
-  | 'x';
+  | 'x'
+  | 'instagram'
+  | 'twitter'
+  | 'spotify';
 
 interface IconProps {
   name: IconName;
@@ -108,6 +111,24 @@ const iconPaths: Record<string, React.ReactNode> = {
     <>
       <path d="M18 6 6 18" />
       <path d="M6 6l12 12" />
+    </>
+  ),
+  instagram: (
+    <>
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <circle cx="12" cy="12" r="5" />
+      <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+    </>
+  ),
+  twitter: (
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  ),
+  spotify: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M8 15c3.5-1 7 0 9 1.5" />
+      <path d="M7 12.5c4.5-1.5 9 0 11.5 2" />
+      <path d="M6 10c5.5-2 11 0 14 2.5" />
     </>
   ),
 };

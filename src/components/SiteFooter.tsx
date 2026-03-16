@@ -1,4 +1,5 @@
 import Icon from './Icon';
+import SubscribeForm from './SubscribeForm';
 
 const footerIcons = [
   'turntable',
@@ -21,6 +22,12 @@ const footerLinks = [
   { label: 'RSS', href: '/rss.xml' },
 ];
 
+const socialLinks = [
+  { label: 'Instagram', href: 'https://instagram.com/bernardontheaux', icon: 'instagram' },
+  { label: 'Twitter', href: 'https://x.com/bernardontheaux', icon: 'twitter' },
+  { label: 'Spotify', href: 'https://open.spotify.com/', icon: 'spotify' },
+];
+
 export default function SiteFooter() {
   return (
     <footer className="site-footer">
@@ -37,13 +44,30 @@ export default function SiteFooter() {
             <p className="footer-text">
               A music website for honest opinions, deep listens, and records that stay with you.
             </p>
+            <div className="footer-socials">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.label}
+                  className="footer-social-link"
+                >
+                  <Icon name={link.icon as any} size={18} />
+                </a>
+              ))}
+            </div>
           </div>
-          <div className="footer-links">
-            {footerLinks.map((link) => (
-              <a key={link.href} href={link.href}>
-                {link.label}
-              </a>
-            ))}
+          <div>
+            <div className="footer-links">
+              {footerLinks.map((link) => (
+                <a key={link.href} href={link.href}>
+                  {link.label}
+                </a>
+              ))}
+            </div>
+            <SubscribeForm />
           </div>
         </div>
 

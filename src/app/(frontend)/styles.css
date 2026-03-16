@@ -1135,7 +1135,7 @@ p { margin: 0 0 1rem; }
   font-size: 0.8rem;
 }
 
-/* Drop cap for first paragraph */
+/* Red drop cap on first paragraph only */
 .post-body > p:first-child::first-letter {
   float: left;
   font-family: var(--font-heading);
@@ -1450,6 +1450,90 @@ p { margin: 0 0 1rem; }
 }
 .footer-links a { color: rgba(255,255,255,0.65); }
 .footer-links a:hover { color: var(--accent); }
+
+/* Social links */
+.footer-socials {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+.footer-social-link {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.6);
+  transition: all 0.15s ease;
+}
+.footer-social-link:hover {
+  color: #fff;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+/* Subscribe form */
+.subscribe-form {
+  margin-top: 1.2rem;
+}
+.subscribe-label {
+  display: block;
+  font-family: var(--font-label);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+.subscribe-row {
+  display: flex;
+  gap: 0;
+}
+.subscribe-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-right: none;
+  border-radius: var(--radius) 0 0 var(--radius);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+}
+.subscribe-input::placeholder { color: rgba(255,255,255,0.3); }
+.subscribe-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.subscribe-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-label);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+.subscribe-btn:hover { background: var(--accent-strong); }
+.subscribe-btn:disabled { opacity: 0.6; cursor: wait; }
+.subscribe-message {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+}
+.subscribe-error {
+  margin: 0.3rem 0 0;
+  font-size: 0.78rem;
+  color: var(--accent);
+}
 
 .footer-bottom {
   text-align: center;
