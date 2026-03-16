@@ -24,8 +24,8 @@ export default function SubscribeForm() {
         setMessage('You\'re in. Thanks for subscribing.')
         setEmail('')
       } else {
-        const data = await res.json().catch((): null => null)
-        const errorMsg = data?.errors?.[0]?.message || ''
+        const data: any = await res.json().catch((): null => null)
+        const errorMsg: string = data?.errors?.[0]?.message || ''
         if (errorMsg.includes('unique') || res.status === 400) {
           setStatus('success')
           setMessage('You\'re already subscribed.')
