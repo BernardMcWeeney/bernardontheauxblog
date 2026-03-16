@@ -12,6 +12,7 @@ const navItems = [
   { label: 'Deep Dives', href: '/deep-dives/', icon: 'dive' as const },
   { label: 'Playlists', href: '/playlists/', icon: 'playlist' as const },
   { label: 'Notes', href: '/notes/', icon: 'note' as const },
+  { label: 'Artists', href: '/artists/', icon: 'music' as const },
   { label: 'Archive', href: '/archive/', icon: 'archive' as const },
   { label: 'Search', href: '/search/', icon: 'search' as const },
 ];

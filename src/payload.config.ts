@@ -7,9 +7,14 @@ import { fileURLToPath } from 'url'
 import { CloudflareContext, getCloudflareContext } from '@opennextjs/cloudflare'
 import { GetPlatformProxyOptions } from 'wrangler'
 import { r2Storage } from '@payloadcms/storage-r2'
+import { seoPlugin } from '@payloadcms/plugin-seo'
+import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { importExportPlugin } from '@payloadcms/plugin-import-export'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Artists } from './collections/Artists'
+import { Labels } from './collections/Labels'
 import { Reviews } from './collections/Reviews'
 import { Gigs } from './collections/Gigs'
 import { DeepDives } from './collections/DeepDives'
@@ -55,7 +60,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     livePreview: {
-      collections: ['reviews', 'gigs', 'deep-dives', 'playlists', 'notes'],
+      collections: ['reviews', 'gigs', 'deep-dives', 'playlists', 'notes', 'artists'],
       breakpoints: [
         { label: 'Mobile', name: 'mobile', width: 375, height: 667 },
         { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
@@ -63,7 +68,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Reviews, Gigs, DeepDives, Playlists, Notes],
+  collections: [Users, Media, Artists, Labels, Reviews, Gigs, DeepDives, Playlists, Notes],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -75,6 +80,53 @@ export default buildConfig({
     r2Storage({
       bucket: cloudflare.env.R2,
       collections: { media: true },
+    }),
+    seoPlugin({
+      collections: ['reviews', 'gigs', 'deep-dives', 'playlists', 'notes'],
+      uploadsCollection: 'media',
+      generateTitle: ({ doc }: any) => {
+        if (doc?.headline) return `${doc.headline} | Bernard on the Aux`
+        const artistName = typeof doc?.artist === 'object' ? doc.artist?.name : ''
+        const prefix = artistName ? `${artistName} — ` : ''
+        return `${prefix}${doc?.title || ''} | Bernard on the Aux`
+      },
+      generateDescription: ({ doc }: any) => {
+        return doc?.excerpt || ''
+      },
+      generateURL: ({ doc, collectionSlug }: any) => {
+        return `https://bernardontheaux.com/${collectionSlug}/${doc?.slug || ''}/`
+      },
+      generateImage: ({ doc }: any) => {
+        if (typeof doc?.cover === 'object' && doc.cover?.id) {
+          return doc.cover.id
+        }
+        return undefined
+      },
+    }),
+    formBuilderPlugin({
+      fields: {
+        text: true,
+        textarea: true,
+        select: true,
+        email: true,
+        state: false,
+        country: false,
+        checkbox: true,
+        number: true,
+        message: true,
+        payment: false,
+      },
+    }),
+    importExportPlugin({
+      collections: [
+        { slug: 'artists' },
+        { slug: 'labels' },
+        { slug: 'reviews' },
+        { slug: 'gigs' },
+        { slug: 'deep-dives' },
+        { slug: 'playlists' },
+        { slug: 'notes' },
+      ],
     }),
   ],
 })

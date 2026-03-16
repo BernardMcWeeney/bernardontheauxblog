@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import PostCard from '@/components/PostCard'
 import { formatDate } from '@/utils/format'
+import { getDisplayTitle } from '@/utils/artist'
 
 function slugifyTag(tag: string): string {
   return tag.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
@@ -78,7 +79,7 @@ export default async function TagDetailPage({
 
   const posts: TaggedPost[] = [
     ...reviews.docs.filter(hasTag).map((doc: any) => ({
-      title: doc.title,
+      title: getDisplayTitle(doc),
       href: `/reviews/${doc.slug}`,
       collection: 'reviews',
       date: doc.reviewDate || doc.createdAt,
@@ -87,7 +88,7 @@ export default async function TagDetailPage({
       rating: doc.rating,
     })),
     ...gigs.docs.filter(hasTag).map((doc: any) => ({
-      title: doc.title,
+      title: getDisplayTitle(doc),
       href: `/gigs/${doc.slug}`,
       collection: 'gigs',
       date: doc.eventDate || doc.createdAt,
@@ -111,7 +112,7 @@ export default async function TagDetailPage({
       coverUrl: getCoverUrl(doc.cover),
     })),
     ...notes.docs.filter(hasTag).map((doc: any) => ({
-      title: doc.title,
+      title: getDisplayTitle(doc),
       href: `/notes/${doc.slug}`,
       collection: 'notes',
       date: doc.listenedOn || doc.createdAt,

@@ -6,6 +6,7 @@ import type { Metadata } from 'next'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import Icon from '@/components/Icon'
 import { formatDate } from '@/utils/format'
+import { getArtistName } from '@/utils/artist'
 
 function slugifyTag(tag: string): string {
   return tag.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
@@ -27,9 +28,12 @@ export async function generateMetadata({
   const note = docs[0]
   if (!note) return { title: 'Note Not Found' }
 
+  const metaTitle = note.meta?.title || `${note.title} — Bernard On The Aux`
+  const metaDescription = note.meta?.description || note.excerpt || `Listening note: ${note.title}`
+
   return {
-    title: `${note.title} — Bernard On The Aux`,
-    description: note.excerpt || `Listening note: ${note.title}`,
+    title: metaTitle,
+    description: metaDescription,
   }
 }
 
@@ -70,7 +74,7 @@ export default async function NoteDetailPage({
           <h1 className="post-title-detail">{note.title}</h1>
           <div className="post-meta-strip">
             {note.listenedOn && <span>{formatDate(note.listenedOn)}</span>}
-            {note.artist && <span>{note.artist}</span>}
+            {getArtistName(note.artist) && <span>{getArtistName(note.artist)}</span>}
             {note.source && <span>{note.source}</span>}
           </div>
         </header>

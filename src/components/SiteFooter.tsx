@@ -15,6 +15,7 @@ const footerLinks = [
   { label: 'Gigs', href: '/gigs/' },
   { label: 'Deep Dives', href: '/deep-dives/' },
   { label: 'Playlists', href: '/playlists/' },
+  { label: 'Artists', href: '/artists/' },
   { label: 'Archive', href: '/archive/' },
   { label: 'About', href: '/about/' },
   { label: 'RSS', href: '/rss.xml' },

@@ -3,6 +3,7 @@ import configPromise from '@payload-config'
 import Icon from '@/components/Icon'
 import PostCard from '@/components/PostCard'
 import { formatDate, formatRating } from '@/utils/format'
+import { getArtistName, getDisplayTitle } from '@/utils/artist'
 import { ReviewFilters } from './ReviewsClient'
 
 const typeLabels: Record<string, string> = {
@@ -146,9 +147,7 @@ export default async function ReviewsPage() {
 
           const tags = Array.isArray(review.tags) ? review.tags.filter(Boolean) : []
           const typeLabel = typeLabels[review.reviewType as string] ?? (review.reviewType as string)
-          const cardTitle = review.artist
-            ? `${review.artist} — ${review.title}`
-            : review.title
+          const cardTitle = getDisplayTitle(review)
 
           return (
             <div

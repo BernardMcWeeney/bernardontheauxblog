@@ -5,6 +5,7 @@ import HeroSlider from '@/components/HeroSlider'
 import PostCard from '@/components/PostCard'
 import Icon from '@/components/Icon'
 import { formatDate } from '@/utils/format'
+import { getArtistName, getDisplayTitle } from '@/utils/artist'
 
 /* ── helpers ── */
 
@@ -66,7 +67,7 @@ export default async function HomePage() {
   const sliderPosts = [
     ...reviews.slice(0, 3).map((r: any) => ({
       type: 'review' as const,
-      title: `${r.artist} — ${r.title}`,
+      title: getDisplayTitle(r),
       href: `/reviews/${r.slug}/`,
       meta: `${formatDate(r.reviewDate)} · ${r.rating}/10`,
       excerpt: r.excerpt,
@@ -78,7 +79,7 @@ export default async function HomePage() {
     })),
     ...gigs.slice(0, 2).map((g: any) => ({
       type: 'gig' as const,
-      title: g.title,
+      title: g.headline || g.title,
       href: `/gigs/${g.slug}/`,
       meta: `${formatDate(g.eventDate)} · ${g.city}`,
       excerpt: g.excerpt,
@@ -90,7 +91,7 @@ export default async function HomePage() {
     })),
     ...deepDives.slice(0, 1).map((d: any) => ({
       type: 'deep-dive' as const,
-      title: d.title,
+      title: d.headline || d.title,
       href: `/deep-dives/${d.slug}/`,
       meta: formatDate(d.publishedOn),
       excerpt: d.excerpt,
@@ -141,13 +142,16 @@ export default async function HomePage() {
     .filter(Boolean)[0]
   const hasTrackPick = Boolean(standoutTrack && latestReview)
 
+  const latestReviewArtist = getArtistName(latestReview?.artist)
+  const latestNoteArtist = getArtistName(latestNote?.artist)
+
   const songOfWeekTitle =
     standoutTrack ?? latestNote?.title ?? 'A fresh pick lands soon'
   const songOfWeekSubtitle =
     hasTrackPick && latestReview
-      ? `${latestReview.artist} · from ${latestReview.title}`
-      : latestNote?.artist
-        ? `${latestNote.artist} · listening note`
+      ? `${latestReviewArtist} · from ${latestReview.title}`
+      : latestNoteArtist
+        ? `${latestNoteArtist} · listening note`
         : 'From the listening desk'
   const songOfWeekMeta =
     hasTrackPick && latestReview
@@ -169,7 +173,7 @@ export default async function HomePage() {
   const nowListening =
     playlistTs > noteTs && latestPlaylist
       ? {
-          title: latestPlaylist.title,
+          title: latestPlaylist.headline || latestPlaylist.title,
           subtitle: `${latestPlaylist.platform} playlist`,
           meta: `Updated ${formatDate(latestPlaylist.publishedOn)}`,
           href: `/playlists/${latestPlaylist.slug}/`,
@@ -177,15 +181,15 @@ export default async function HomePage() {
         }
       : latestNote
         ? {
-            title: latestNote.title,
-            subtitle: latestNote.artist ?? 'Listening note',
+            title: latestNote.headline || latestNote.title,
+            subtitle: latestNoteArtist || 'Listening note',
             meta: `Logged ${formatDate(latestNote.listenedOn)}`,
             href: `/notes/${latestNote.slug}/`,
             cta: 'Read note',
           }
         : latestReview
           ? {
-              title: `${latestReview.artist} — ${latestReview.title}`,
+              title: getDisplayTitle(latestReview),
               subtitle: 'Latest album review',
               meta: `Reviewed ${formatDate(latestReview.reviewDate)}`,
               href: `/reviews/${latestReview.slug}/`,
@@ -277,7 +281,7 @@ export default async function HomePage() {
             </div>
             <h3 className="signal-title">
               {albumOfMonth
-                ? `${albumOfMonth.artist} — ${albumOfMonth.title}`
+                ? getDisplayTitle(albumOfMonth)
                 : 'No album selected yet'}
             </h3>
             <p className="signal-subtitle">
@@ -344,7 +348,7 @@ export default async function HomePage() {
             {pinnedReviews.map((entry: any) => (
               <PostCard
                 key={entry.slug}
-                title={`${entry.artist} — ${entry.title}`}
+                title={getDisplayTitle(entry)}
                 href={`/reviews/${entry.slug}/`}
                 meta={`${formatDate(entry.reviewDate)} · ${entry.rating}/10`}
                 excerpt={entry.excerpt}
@@ -378,7 +382,7 @@ export default async function HomePage() {
           {latestReviews.map((entry: any) => (
             <PostCard
               key={entry.slug}
-              title={`${entry.artist} — ${entry.title}`}
+              title={getDisplayTitle(entry)}
               href={`/reviews/${entry.slug}/`}
               meta={`${formatDate(entry.reviewDate)} · ${entry.rating}/10`}
               excerpt={entry.excerpt}
@@ -405,7 +409,7 @@ export default async function HomePage() {
         <div className="grid">
           {latestGig && (
             <PostCard
-              title={latestGig.title}
+              title={latestGig.headline || latestGig.title}
               href={`/gigs/${latestGig.slug}/`}
               meta={`${formatDate(latestGig.eventDate)} · ${latestGig.city}`}
               excerpt={latestGig.excerpt}
@@ -416,7 +420,7 @@ export default async function HomePage() {
           )}
           {latestDeepDive && (
             <PostCard
-              title={latestDeepDive.title}
+              title={latestDeepDive.headline || latestDeepDive.title}
               href={`/deep-dives/${latestDeepDive.slug}/`}
               meta={formatDate(latestDeepDive.publishedOn)}
               excerpt={latestDeepDive.excerpt}
@@ -427,7 +431,7 @@ export default async function HomePage() {
           )}
           {latestPlaylist && (
             <PostCard
-              title={latestPlaylist.title}
+              title={latestPlaylist.headline || latestPlaylist.title}
               href={`/playlists/${latestPlaylist.slug}/`}
               meta={`${formatDate(latestPlaylist.publishedOn)} · ${latestPlaylist.platform}`}
               excerpt={latestPlaylist.excerpt}
@@ -438,7 +442,7 @@ export default async function HomePage() {
           )}
           {latestNote && (
             <PostCard
-              title={latestNote.title}
+              title={latestNote.headline || latestNote.title}
               href={`/notes/${latestNote.slug}/`}
               meta={formatDate(latestNote.listenedOn)}
               excerpt={latestNote.excerpt}

@@ -443,6 +443,33 @@ function readMarkdownFiles(dirPath: string): { slug: string; raw: string }[] {
   }))
 }
 
+// ── Artist and Label lookup helpers ──────────────────────────────────────
+
+const artistIdMap = new Map<string, number>()
+const labelIdMap = new Map<string, number>()
+
+async function getOrCreateArtist(payload: Awaited<ReturnType<typeof getPayload>>, name: string): Promise<number> {
+  const normalized = name.trim()
+  if (artistIdMap.has(normalized)) return artistIdMap.get(normalized)!
+  const doc = await payload.create({
+    collection: 'artists',
+    data: { name: normalized } as any,
+  })
+  artistIdMap.set(normalized, doc.id as number)
+  return doc.id as number
+}
+
+async function getOrCreateLabel(payload: Awaited<ReturnType<typeof getPayload>>, name: string): Promise<number> {
+  const normalized = name.trim()
+  if (labelIdMap.has(normalized)) return labelIdMap.get(normalized)!
+  const doc = await payload.create({
+    collection: 'labels',
+    data: { name: normalized } as any,
+  })
+  labelIdMap.set(normalized, doc.id as number)
+  return doc.id as number
+}
+
 // ── Seed functions per collection ──────────────────────────────────────────
 
 async function seedReviews(payload: Awaited<ReturnType<typeof getPayload>>) {
@@ -455,18 +482,21 @@ async function seedReviews(payload: Awaited<ReturnType<typeof getPayload>>) {
       const { data, body } = parseFrontmatter(file.raw)
       const content = markdownToLexical(body)
 
+      const artistId = data.artist ? await getOrCreateArtist(payload, data.artist as string) : undefined
+      const labelId = data.label ? await getOrCreateLabel(payload, data.label as string) : undefined
+
       await payload.create({
         collection: 'reviews',
         data: {
           title: data.title,
           slug: file.slug,
           reviewType: data.reviewType || undefined,
-          artist: data.artist || undefined,
+          artist: artistId,
           reviewDate: data.reviewDate,
           listenedOn: data.listenedOn || undefined,
           rating: data.rating,
           format: data.format || undefined,
-          label: data.label || undefined,
+          label: labelId,
           releaseYear: data.releaseYear || undefined,
           standoutTracks: data.standoutTracks || undefined,
           venue: data.venue || undefined,
@@ -497,12 +527,14 @@ async function seedGigs(payload: Awaited<ReturnType<typeof getPayload>>) {
       const { data, body } = parseFrontmatter(file.raw)
       const content = markdownToLexical(body)
 
+      const artistId = data.artist ? await getOrCreateArtist(payload, data.artist as string) : undefined
+
       await payload.create({
         collection: 'gigs',
         data: {
           title: data.title as string,
           slug: file.slug,
-          artist: data.artist as string,
+          artist: artistId,
           venue: data.venue as string,
           city: data.city as string,
           eventDate: data.eventDate as string,
@@ -603,13 +635,15 @@ async function seedNotes(payload: Awaited<ReturnType<typeof getPayload>>) {
       const { data, body } = parseFrontmatter(file.raw)
       const content = markdownToLexical(body)
 
+      const artistId = data.artist ? await getOrCreateArtist(payload, data.artist as string) : undefined
+
       await payload.create({
         collection: 'notes',
         data: {
           title: data.title as string,
           slug: file.slug,
           listenedOn: data.listenedOn as string,
-          artist: (data.artist as string) || undefined,
+          artist: artistId,
           source: (data.source as string) || undefined,
           tags: (data.tags as string[]) || [],
           excerpt: (data.excerpt as string) || undefined,
@@ -771,9 +805,16 @@ async function seedExtraReviews(payload: Awaited<ReturnType<typeof getPayload>>)
 
   for (const review of reviews) {
     try {
+      const artistId = review.artist ? await getOrCreateArtist(payload, review.artist) : undefined
+      const labelId = review.label ? await getOrCreateLabel(payload, review.label) : undefined
+
       await payload.create({
         collection: 'reviews',
-        data: review as any,
+        data: {
+          ...review,
+          artist: artistId,
+          label: labelId,
+        } as any,
       })
       console.log(`  Created review: ${review.artist} — ${review.title}`)
     } catch (err) {
@@ -877,9 +918,14 @@ async function seedExtraContent(payload: Awaited<ReturnType<typeof getPayload>>)
 
   for (const note of extraNotes) {
     try {
+      const artistId = note.artist ? await getOrCreateArtist(payload, note.artist) : undefined
+
       await payload.create({
         collection: 'notes',
-        data: note as any,
+        data: {
+          ...note,
+          artist: artistId,
+        } as any,
       })
       console.log(`  Created note: ${note.title}`)
     } catch (err) {

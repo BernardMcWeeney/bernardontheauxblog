@@ -8,6 +8,7 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import Icon from '@/components/Icon'
 import { formatDate, formatRating } from '@/utils/format'
 import { calculateReadingTime, formatReadingTime } from '@/utils/readingTime'
+import { getArtistName, getLabelName, getDisplayTitle } from '@/utils/artist'
 
 const typeLabels: Record<string, string> = {
   album: 'Album',
@@ -54,17 +55,26 @@ export async function generateMetadata({
         ? cover
         : undefined
 
-  const title = review.artist
-    ? `${review.artist} — ${review.title}`
+  const artistName = getArtistName(review.artist)
+  const displayTitle = artistName
+    ? `${artistName} — ${review.title}`
     : review.title
 
+  const metaTitle = review.meta?.title || `${displayTitle} | Reviews | Bernard on the Aux`
+  const metaDescription = review.meta?.description || review.excerpt || `Review of ${displayTitle}`
+  const metaImage = review.meta?.image
+  const metaImageUrl =
+    typeof metaImage === 'object' && metaImage?.url
+      ? metaImage.url
+      : coverUrl
+
   return {
-    title: `${title} | Reviews | Bernard on the Aux`,
-    description: review.excerpt ?? `Review of ${title}`,
+    title: metaTitle,
+    description: metaDescription,
     openGraph: {
-      title: `${title} — Review`,
-      description: review.excerpt ?? `Review of ${title}`,
-      ...(coverUrl ? { images: [{ url: coverUrl }] } : {}),
+      title: metaTitle,
+      description: metaDescription,
+      ...(metaImageUrl ? { images: [{ url: metaImageUrl }] } : {}),
     },
   }
 }
@@ -89,9 +99,8 @@ export default async function ReviewDetailPage({
     typeof cover === 'object' && cover?.alt ? cover.alt : review.title
 
   const typeLabel = typeLabels[review.reviewType as string] ?? (review.reviewType as string)
-  const displayTitle = review.artist
-    ? `${review.artist} — ${review.title}`
-    : review.title
+  const artistName = getArtistName(review.artist)
+  const displayTitle = getDisplayTitle(review)
 
   // Estimate reading time from rich text (extract plain text)
   const contentJson =
@@ -111,7 +120,7 @@ export default async function ReviewDetailPage({
       {
         '@type': 'MusicAlbum',
         name: review.title,
-        ...(review.artist ? { byArtist: { '@type': 'MusicGroup', name: review.artist } } : {}),
+        ...(artistName ? { byArtist: { '@type': 'MusicGroup', name: artistName } } : {}),
         ...(review.releaseYear ? { datePublished: String(review.releaseYear) } : {}),
         ...(coverUrl ? { image: coverUrl } : {}),
         review: {
@@ -221,10 +230,16 @@ export default async function ReviewDetailPage({
               {/* Album Info card */}
               <div className="sidebar-card">
                 <p className="sidebar-card-title">Album Info</p>
-                {review.artist && (
+                {artistName && (
                   <div className="sidebar-item">
                     <span className="sidebar-item-label">Artist</span>
-                    <span className="sidebar-item-value">{review.artist}</span>
+                    <span className="sidebar-item-value">
+                      {typeof review.artist === 'object' && review.artist !== null && 'slug' in review.artist ? (
+                        <Link href={`/artists/${(review.artist as any).slug}/`}>{artistName}</Link>
+                      ) : (
+                        artistName
+                      )}
+                    </span>
                   </div>
                 )}
                 {review.releaseYear && (
@@ -239,10 +254,10 @@ export default async function ReviewDetailPage({
                     <span className="sidebar-item-value">{review.format}</span>
                   </div>
                 )}
-                {review.label && (
+                {getLabelName(review.label) && (
                   <div className="sidebar-item">
                     <span className="sidebar-item-label">Label</span>
-                    <span className="sidebar-item-value">{review.label}</span>
+                    <span className="sidebar-item-value">{getLabelName(review.label)}</span>
                   </div>
                 )}
                 {review.listenedOn && (

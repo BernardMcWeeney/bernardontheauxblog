@@ -1,5 +1,6 @@
 import * as migration_20250929_111647 from './20250929_111647';
 import * as migration_20260315_152013_add_content_collections from './20260315_152013_add_content_collections';
+import * as migration_20260316_120000_add_artists_labels_seo from './20260316_120000_add_artists_labels_seo';
 
 export const migrations = [
   {
@@ -11,5 +12,10 @@ export const migrations = [
     up: migration_20260315_152013_add_content_collections.up,
     down: migration_20260315_152013_add_content_collections.down,
     name: '20260315_152013_add_content_collections'
+  },
+  {
+    up: migration_20260316_120000_add_artists_labels_seo.up,
+    down: migration_20260316_120000_add_artists_labels_seo.down,
+    name: '20260316_120000_add_artists_labels_seo'
   },
 ];

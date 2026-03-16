@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import Icon from '@/components/Icon'
 import { formatDate } from '@/utils/format'
+import { getDisplayTitle } from '@/utils/artist'
 
 export const metadata: Metadata = {
   title: 'Archive | Bernard On The Aux',
@@ -42,22 +43,22 @@ export default async function ArchivePage() {
   const payload = await getPayload({ config: configPromise })
 
   const [reviews, gigs, deepDives, playlists, notes] = await Promise.all([
-    payload.find({ collection: 'reviews', where: { published: { equals: true } }, limit: 500, depth: 0 }),
-    payload.find({ collection: 'gigs', where: { published: { equals: true } }, limit: 500, depth: 0 }),
+    payload.find({ collection: 'reviews', where: { published: { equals: true } }, limit: 500, depth: 1 }),
+    payload.find({ collection: 'gigs', where: { published: { equals: true } }, limit: 500, depth: 1 }),
     payload.find({ collection: 'deep-dives', where: { published: { equals: true } }, limit: 500, depth: 0 }),
     payload.find({ collection: 'playlists', where: { published: { equals: true } }, limit: 500, depth: 0 }),
-    payload.find({ collection: 'notes', where: { published: { equals: true } }, limit: 500, depth: 0 }),
+    payload.find({ collection: 'notes', where: { published: { equals: true } }, limit: 500, depth: 1 }),
   ])
 
   const items: ArchiveItem[] = [
     ...reviews.docs.map((doc: any) => ({
-      title: doc.title,
+      title: getDisplayTitle(doc),
       href: `/reviews/${doc.slug}`,
       collection: 'reviews',
       date: doc.reviewDate || doc.createdAt,
     })),
     ...gigs.docs.map((doc: any) => ({
-      title: doc.title,
+      title: getDisplayTitle(doc),
       href: `/gigs/${doc.slug}`,
       collection: 'gigs',
       date: doc.eventDate || doc.createdAt,
@@ -75,7 +76,7 @@ export default async function ArchivePage() {
       date: doc.publishedOn || doc.createdAt,
     })),
     ...notes.docs.map((doc: any) => ({
-      title: doc.title,
+      title: getDisplayTitle(doc),
       href: `/notes/${doc.slug}`,
       collection: 'notes',
       date: doc.listenedOn || doc.createdAt,

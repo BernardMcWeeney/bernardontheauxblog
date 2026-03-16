@@ -1,5 +1,6 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import { getArtistName } from '@/utils/artist'
 
 const SITE_TITLE = 'Bernard On The Aux'
 const SITE_URL = 'https://bernardontheaux.com'
@@ -37,14 +38,14 @@ export async function GET() {
       collection: 'reviews',
       where: { published: { equals: true } },
       limit: 500,
-      depth: 0,
+      depth: 1,
       sort: '-reviewDate',
     }),
     payload.find({
       collection: 'gigs',
       where: { published: { equals: true } },
       limit: 500,
-      depth: 0,
+      depth: 1,
       sort: '-eventDate',
     }),
     payload.find({
@@ -65,7 +66,7 @@ export async function GET() {
       collection: 'notes',
       where: { published: { equals: true } },
       limit: 500,
-      depth: 0,
+      depth: 1,
       sort: '-listenedOn',
     }),
   ])
@@ -73,7 +74,8 @@ export async function GET() {
   const items: FeedItem[] = []
 
   for (const doc of reviews.docs as any[]) {
-    const displayTitle = doc.artist ? `${doc.artist} \u2014 ${doc.title}` : doc.title
+    const artistName = getArtistName(doc.artist)
+    const displayTitle = artistName ? `${artistName} \u2014 ${doc.title}` : doc.title
     items.push({
       title: displayTitle,
       link: `${SITE_URL}/reviews/${doc.slug}`,
@@ -84,8 +86,10 @@ export async function GET() {
   }
 
   for (const doc of gigs.docs as any[]) {
+    const artistName = getArtistName(doc.artist)
+    const gigTitle = artistName ? `${artistName} \u2014 ${doc.title}` : doc.title
     items.push({
-      title: doc.title,
+      title: gigTitle,
       link: `${SITE_URL}/gigs/${doc.slug}`,
       description: doc.excerpt || '',
       pubDate: doc.eventDate || doc.createdAt,
@@ -114,8 +118,10 @@ export async function GET() {
   }
 
   for (const doc of notes.docs as any[]) {
+    const artistName = getArtistName(doc.artist)
+    const noteTitle = artistName ? `${artistName} \u2014 ${doc.title}` : doc.title
     items.push({
-      title: doc.title,
+      title: noteTitle,
       link: `${SITE_URL}/notes/${doc.slug}`,
       description: doc.excerpt || '',
       pubDate: doc.listenedOn || doc.createdAt,

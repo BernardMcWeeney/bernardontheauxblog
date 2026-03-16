@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import Icon from '@/components/Icon'
 import { formatDate } from '@/utils/format'
+import { getArtistName, getDisplayTitle } from '@/utils/artist'
 
 function getCoverUrl(cover: any): string | undefined {
   if (!cover) return undefined
@@ -34,9 +35,12 @@ export async function generateMetadata({
   const gig = docs[0]
   if (!gig) return { title: 'Gig Not Found' }
 
+  const metaTitle = gig.meta?.title || `${gig.title} — Bernard On The Aux`
+  const metaDescription = gig.meta?.description || gig.excerpt || `Gig diary: ${gig.title}`
+
   return {
-    title: `${gig.title} — Bernard On The Aux`,
-    description: gig.excerpt || `Gig diary: ${gig.title}`,
+    title: metaTitle,
+    description: metaDescription,
   }
 }
 
@@ -88,7 +92,7 @@ export default async function GigDetailPage({
               <div className="post-collection-badge badge-gig">
                 <Icon name="gig" /> Gig Diary
               </div>
-              <h1 className="post-title-detail">{gig.title}</h1>
+              <h1 className="post-title-detail">{getDisplayTitle(gig)}</h1>
               <div className="post-meta-strip">
                 {gig.eventDate && <span>{formatDate(gig.eventDate)}</span>}
                 {gig.venue && <span>{gig.venue}</span>}
@@ -112,10 +116,16 @@ export default async function GigDetailPage({
           <aside className="post-sidebar">
             <div className="sidebar-card">
               <p className="sidebar-card-title">Event Info</p>
-              {gig.artist && (
+              {getArtistName(gig.artist) && (
                 <div className="sidebar-item">
                   <span className="sidebar-item-label">Artist</span>
-                  <span className="sidebar-item-value">{gig.artist}</span>
+                  <span className="sidebar-item-value">
+                    {typeof gig.artist === 'object' && gig.artist !== null && 'slug' in gig.artist ? (
+                      <Link href={`/artists/${(gig.artist as any).slug}/`}>{getArtistName(gig.artist)}</Link>
+                    ) : (
+                      getArtistName(gig.artist)
+                    )}
+                  </span>
                 </div>
               )}
               {gig.venue && (

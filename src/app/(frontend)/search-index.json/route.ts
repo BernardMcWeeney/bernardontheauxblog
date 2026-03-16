@@ -1,5 +1,6 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import { getArtistName } from '@/utils/artist'
 
 interface SearchIndexEntry {
   title: string
@@ -19,13 +20,13 @@ export async function GET() {
       collection: 'reviews',
       where: { published: { equals: true } },
       limit: 500,
-      depth: 0,
+      depth: 1,
     }),
     payload.find({
       collection: 'gigs',
       where: { published: { equals: true } },
       limit: 500,
-      depth: 0,
+      depth: 1,
     }),
     payload.find({
       collection: 'deep-dives',
@@ -43,7 +44,7 @@ export async function GET() {
       collection: 'notes',
       where: { published: { equals: true } },
       limit: 500,
-      depth: 0,
+      depth: 1,
     }),
   ])
 
@@ -56,7 +57,7 @@ export async function GET() {
       collection: 'reviews',
       date: doc.reviewDate || doc.createdAt,
       excerpt: doc.excerpt || '',
-      artist: doc.artist || '',
+      artist: getArtistName(doc.artist),
       tags: Array.isArray(doc.tags) ? doc.tags : [],
     })
   }
@@ -68,7 +69,7 @@ export async function GET() {
       collection: 'gigs',
       date: doc.eventDate || doc.createdAt,
       excerpt: doc.excerpt || '',
-      artist: doc.artist || '',
+      artist: getArtistName(doc.artist),
       tags: Array.isArray(doc.tags) ? doc.tags : [],
     })
   }
@@ -104,7 +105,7 @@ export async function GET() {
       collection: 'notes',
       date: doc.listenedOn || doc.createdAt,
       excerpt: doc.excerpt || '',
-      artist: doc.artist || '',
+      artist: getArtistName(doc.artist),
       tags: Array.isArray(doc.tags) ? doc.tags : [],
     })
   }
