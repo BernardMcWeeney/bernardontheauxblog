@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import SearchClient from './SearchClient'
+import { getArtistName } from '@/utils/artist'
 
 export const metadata: Metadata = {
   title: 'Search | Bernard On The Aux',
@@ -45,7 +46,7 @@ export default async function SearchPage() {
       collection: 'reviews',
       collectionLabel: 'Review',
       excerpt: doc.excerpt || '',
-      artist: doc.artist || '',
+      artist: getArtistName(doc.artist),
       tags: Array.isArray(doc.tags) ? doc.tags : [],
       date: doc.reviewDate || doc.createdAt,
       coverUrl: getCoverUrl(doc.cover),
@@ -56,7 +57,7 @@ export default async function SearchPage() {
       collection: 'gigs',
       collectionLabel: 'Gig',
       excerpt: doc.excerpt || '',
-      artist: doc.artist || '',
+      artist: getArtistName(doc.artist),
       tags: Array.isArray(doc.tags) ? doc.tags : [],
       date: doc.eventDate || doc.createdAt,
       coverUrl: getCoverUrl(doc.cover),
@@ -89,7 +90,7 @@ export default async function SearchPage() {
       collection: 'notes',
       collectionLabel: 'Note',
       excerpt: doc.excerpt || '',
-      artist: doc.artist || '',
+      artist: getArtistName(doc.artist),
       tags: Array.isArray(doc.tags) ? doc.tags : [],
       date: doc.listenedOn || doc.createdAt,
       coverUrl: getCoverUrl(doc.cover),
