@@ -1,10 +1,11 @@
+import fs from 'fs'
 import path from 'path'
 import { sqliteD1Adapter } from '@payloadcms/db-d1-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import { CloudflareContext, getCloudflareContext } from '@opennextjs/cloudflare'
-import type { GetPlatformProxyOptions } from 'wrangler'
+import { GetPlatformProxyOptions } from 'wrangler'
 import { r2Storage } from '@payloadcms/storage-r2'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 
@@ -21,39 +22,60 @@ import { Subscribers } from './collections/Subscribers'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+const realpath = (value: string) => (fs.existsSync(value) ? fs.realpathSync(value) : undefined)
 
+const isCLI = process.argv.some((value) => realpath(value)?.endsWith(path.join('payload', 'bin.js')))
 const isProduction = process.env.NODE_ENV === 'production'
 
-// Detect Payload CLI (e.g. `payload migrate`). Wrapped in try/catch because
-// fs operations may not be available in the Cloudflare Workers runtime.
-let isCLI = false
-try {
-  const fs = await import('fs')
-  isCLI = process.argv.some((value) => {
-    if (!fs.existsSync(value)) return false
-    return fs.realpathSync(value).endsWith(path.join('payload', 'bin.js'))
-  })
-} catch {
-  // Workers runtime — not CLI
-}
+const createLog =
+  (level: string, fn: typeof console.log) => (objOrMsg: object | string, msg?: string) => {
+    if (typeof objOrMsg === 'string') {
+      fn(JSON.stringify({ level, msg: objOrMsg }))
+    } else {
+      fn(JSON.stringify({ level, ...objOrMsg, msg: msg ?? (objOrMsg as { msg?: string }).msg }))
+    }
+  }
 
-// CF_PAGES is set during Cloudflare Pages builds (not at runtime).
-// During build, getCloudflareContext tries to connect to edge-preview which can timeout.
-// Use wrangler's local proxy instead during the build phase.
-const isCFPagesBuild = process.env.CF_PAGES === '1'
+const cloudflareLogger = {
+  level: process.env.PAYLOAD_LOG_LEVEL || 'info',
+  trace: createLog('trace', console.debug),
+  debug: createLog('debug', console.debug),
+  info: createLog('info', console.log),
+  warn: createLog('warn', console.warn),
+  error: createLog('error', console.error),
+  fatal: createLog('fatal', console.error),
+  silent: () => {},
+} as any
 
 const cloudflare =
   isCLI || !isProduction
     ? await getCloudflareContextFromWrangler()
-    : isCFPagesBuild
-      ? await getCloudflareContextFromWrangler(false)
-      : await getCloudflareContext({ async: true })
+    : await getCloudflareContext({ async: true })
 
 export default buildConfig({
   admin: {
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
+    },
+    livePreview: {
+      url: ({ data, collectionConfig, req }) => {
+        const base = `${req.protocol}//${req.host}`
+        const slug = data?.slug || ''
+        const collectionSlug = collectionConfig?.slug
+        if (collectionSlug === 'reviews') return `${base}/reviews/${slug}`
+        if (collectionSlug === 'gigs') return `${base}/gigs/${slug}`
+        if (collectionSlug === 'deep-dives') return `${base}/deep-dives/${slug}`
+        if (collectionSlug === 'playlists') return `${base}/playlists/${slug}`
+        if (collectionSlug === 'notes') return `${base}/notes/${slug}`
+        return base
+      },
+      collections: ['reviews', 'gigs', 'deep-dives', 'playlists', 'notes'],
+      breakpoints: [
+        { label: 'Mobile', name: 'mobile', width: 375, height: 667 },
+        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+      ],
     },
   },
   collections: [Users, Media, Artists, Labels, Reviews, Gigs, DeepDives, Playlists, Notes, Subscribers],
@@ -63,6 +85,7 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: sqliteD1Adapter({ binding: cloudflare.env.D1 }),
+  logger: isProduction ? cloudflareLogger : undefined,
   plugins: [
     r2Storage({
       bucket: cloudflare.env.R2,
@@ -94,12 +117,12 @@ export default buildConfig({
 })
 
 // Adapted from https://github.com/opennextjs/opennextjs-cloudflare/blob/d00b3a13e42e65aad76fba41774815726422cc39/packages/cloudflare/src/api/cloudflare-context.ts#L328C36-L328C46
-function getCloudflareContextFromWrangler(remoteBindings?: boolean): Promise<CloudflareContext> {
+function getCloudflareContextFromWrangler(): Promise<CloudflareContext> {
   return import(/* webpackIgnore: true */ `${'__wrangler'.replaceAll('_', '')}`).then(
     ({ getPlatformProxy }) =>
       getPlatformProxy({
         environment: process.env.CLOUDFLARE_ENV,
-        remoteBindings: remoteBindings ?? isProduction,
+        remoteBindings: isProduction,
       } satisfies GetPlatformProxyOptions),
   )
 }
