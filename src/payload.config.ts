@@ -1,4 +1,3 @@
-import fs from 'fs'
 import path from 'path'
 import { sqliteD1Adapter } from '@payloadcms/db-d1-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -8,8 +7,6 @@ import { CloudflareContext, getCloudflareContext } from '@opennextjs/cloudflare'
 import { GetPlatformProxyOptions } from 'wrangler'
 import { r2Storage } from '@payloadcms/storage-r2'
 import { seoPlugin } from '@payloadcms/plugin-seo'
-import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
-import { importExportPlugin } from '@payloadcms/plugin-import-export'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -23,33 +20,24 @@ import { Notes } from './collections/Notes'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
-const realpath = (value: string) => (fs.existsSync(value) ? fs.realpathSync(value) : undefined)
 
-const isCLI = process.argv.some((value) => realpath(value).endsWith(path.join('payload', 'bin.js')))
 const isProduction = process.env.NODE_ENV === 'production'
 
-const createLog =
-  (level: string, fn: typeof console.log) => (objOrMsg: object | string, msg?: string) => {
-    if (typeof objOrMsg === 'string') {
-      fn(JSON.stringify({ level, msg: objOrMsg }))
-    } else {
-      fn(JSON.stringify({ level, ...objOrMsg, msg: msg ?? (objOrMsg as { msg?: string }).msg }))
-    }
-  }
-
-const cloudflareLogger = {
-  level: process.env.PAYLOAD_LOG_LEVEL || 'info',
-  trace: createLog('trace', console.debug),
-  debug: createLog('debug', console.debug),
-  info: createLog('info', console.log),
-  warn: createLog('warn', console.warn),
-  error: createLog('error', console.error),
-  fatal: createLog('fatal', console.error),
-  silent: () => {},
-} as any // Use PayloadLogger type when it's exported
+// Detect Payload CLI (e.g. `payload migrate`). Wrapped in try/catch because
+// fs operations may not be available in the Cloudflare Workers runtime.
+let isCLI = false
+try {
+  const fs = await import('fs')
+  isCLI = process.argv.some((value) => {
+    if (!fs.existsSync(value)) return false
+    return fs.realpathSync(value).endsWith(path.join('payload', 'bin.js'))
+  })
+} catch {
+  // Workers runtime — not CLI
+}
 
 // CF_PAGES is set during Cloudflare Pages builds (not at runtime).
-// During build, getCloudflareContext tries to connect to edge-preview which can 504 timeout.
+// During build, getCloudflareContext tries to connect to edge-preview which can timeout.
 // Use wrangler's local proxy instead during the build phase.
 const isCFPagesBuild = process.env.CF_PAGES === '1'
 
@@ -82,7 +70,6 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: sqliteD1Adapter({ binding: cloudflare.env.D1 }),
-  logger: isProduction ? cloudflareLogger : undefined,
   plugins: [
     r2Storage({
       bucket: cloudflare.env.R2,
@@ -109,31 +96,6 @@ export default buildConfig({
         }
         return undefined
       },
-    }),
-    formBuilderPlugin({
-      fields: {
-        text: true,
-        textarea: true,
-        select: true,
-        email: true,
-        state: false,
-        country: false,
-        checkbox: true,
-        number: true,
-        message: true,
-        payment: false,
-      },
-    }),
-    importExportPlugin({
-      collections: [
-        { slug: 'artists' },
-        { slug: 'labels' },
-        { slug: 'reviews' },
-        { slug: 'gigs' },
-        { slug: 'deep-dives' },
-        { slug: 'playlists' },
-        { slug: 'notes' },
-      ],
     }),
   ],
 })
