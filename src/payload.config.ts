@@ -19,6 +19,7 @@ import { DeepDives } from './collections/DeepDives'
 import { Playlists } from './collections/Playlists'
 import { Notes } from './collections/Notes'
 import { Subscribers } from './collections/Subscribers'
+import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -79,6 +80,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Artists, Labels, Reviews, Gigs, DeepDives, Playlists, Notes, Subscribers],
+  globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

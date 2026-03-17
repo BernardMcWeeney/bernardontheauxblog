@@ -103,8 +103,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -823,6 +827,90 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  songOfTheWeek: {
+    /**
+     * Song title
+     */
+    title: string;
+    artist: string;
+    /**
+     * e.g. "from People Watching" or "latest single"
+     */
+    context?: string | null;
+    /**
+     * Link to a review (optional)
+     */
+    link?: (number | null) | Review;
+    /**
+     * Or link to Spotify/YouTube/etc instead
+     */
+    externalUrl?: string | null;
+  };
+  nowListening: {
+    /**
+     * What you're listening to
+     */
+    title: string;
+    /**
+     * e.g. artist name or context
+     */
+    subtitle?: string | null;
+    /**
+     * Link to related content (optional)
+     */
+    link?:
+      | ({
+          relationTo: 'reviews';
+          value: number | Review;
+        } | null)
+      | ({
+          relationTo: 'playlists';
+          value: number | Playlist;
+        } | null)
+      | ({
+          relationTo: 'notes';
+          value: number | Note;
+        } | null);
+    /**
+     * Or link to Spotify/YouTube/etc
+     */
+    externalUrl?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  songOfTheWeek?:
+    | T
+    | {
+        title?: T;
+        artist?: T;
+        context?: T;
+        link?: T;
+        externalUrl?: T;
+      };
+  nowListening?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        link?: T;
+        externalUrl?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -32,12 +32,27 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const artist = await getArtist(slug)
+  const artist: any = await getArtist(slug)
   if (!artist) return {}
 
+  const metaTitle = `${artist.name} | Artists | Bernard on the Aux`
+  const metaDescription = artist.bio || `All reviews, gigs, and notes for ${artist.name}.`
+  const imageUrl = typeof artist.image === 'object' && artist.image?.url ? artist.image.url : undefined
+
   return {
-    title: `${artist.name} | Artists | Bernard on the Aux`,
-    description: artist.bio || `All reviews, gigs, and notes for ${artist.name}.`,
+    title: metaTitle,
+    description: metaDescription,
+    openGraph: {
+      title: metaTitle,
+      description: metaDescription,
+      ...(imageUrl ? { images: [{ url: imageUrl }] } : {}),
+    },
+    twitter: {
+      card: imageUrl ? 'summary_large_image' : 'summary',
+      title: metaTitle,
+      description: metaDescription,
+      ...(imageUrl ? { images: [imageUrl] } : {}),
+    },
   }
 }
 
@@ -100,7 +115,32 @@ export default async function ArtistDetailPage({
       ? artist.image.alt
       : artist.name
 
+  const artistJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'MusicGroup',
+        name: artist.name,
+        ...(imageUrl ? { image: imageUrl } : {}),
+        ...(artist.bio ? { description: artist.bio } : {}),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: '/' },
+          { '@type': 'ListItem', position: 2, name: 'Artists', item: '/artists/' },
+          { '@type': 'ListItem', position: 3, name: artist.name, item: `/artists/${artist.slug}/` },
+        ],
+      },
+    ],
+  }
+
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(artistJsonLd) }}
+    />
     <div className="container">
       <div className="post-layout">
         <Link href="/artists/" className="post-back">
@@ -225,5 +265,6 @@ export default async function ArtistDetailPage({
         )}
       </div>
     </div>
+    </>
   )
 }

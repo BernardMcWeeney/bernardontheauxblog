@@ -63,9 +63,9 @@ export default async function HomePage() {
   const playlists = playlistsRes.docs
   const notes = notesRes.docs
 
-  /* ── Hero Slider: latest 6 posts (3 reviews, 2 gigs, 1 deep-dive) ── */
+  /* ── Hero Slider: up to 10 latest posts across all collections ── */
   const sliderPosts = [
-    ...reviews.slice(0, 3).map((r: any) => ({
+    ...reviews.slice(0, 5).map((r: any) => ({
       type: 'review' as const,
       title: getDisplayTitle(r),
       href: `/reviews/${r.slug}/`,
@@ -77,7 +77,7 @@ export default async function HomePage() {
       label: 'Review',
       pillClass: 'pill-review',
     })),
-    ...gigs.slice(0, 2).map((g: any) => ({
+    ...gigs.slice(0, 3).map((g: any) => ({
       type: 'gig' as const,
       title: g.headline || g.title,
       href: `/gigs/${g.slug}/`,
@@ -89,7 +89,7 @@ export default async function HomePage() {
       label: 'Gig',
       pillClass: 'pill-gig',
     })),
-    ...deepDives.slice(0, 1).map((d: any) => ({
+    ...deepDives.slice(0, 2).map((d: any) => ({
       type: 'deep-dive' as const,
       title: d.headline || d.title,
       href: `/deep-dives/${d.slug}/`,
@@ -103,7 +103,10 @@ export default async function HomePage() {
     })),
   ]
     .sort((a, b) => b.date.valueOf() - a.date.valueOf())
-    .slice(0, 6)
+    .slice(0, 10)
+
+  /* ── Site Settings (editorial picks) ── */
+  const siteSettings: any = await payload.findGlobal({ slug: 'site-settings' as any }).catch((): null => null)
 
   /* ── Signal board data ── */
   const latestReview: any = reviews[0]
@@ -135,43 +138,40 @@ export default async function HomePage() {
       )
     : 'No reviews yet'
 
-  // Song of the Week
-  const standoutTrack = latestReview?.standoutTracks
-    ?.split(',')
-    .map((t: string) => t.trim())
-    .filter(Boolean)[0]
-  const hasTrackPick = Boolean(standoutTrack && latestReview)
+  // Song of the Week — from Site Settings, with auto-fallback
+  const sotw = siteSettings?.songOfTheWeek
+  const sotwLinkedReview: any = sotw?.link && typeof sotw.link === 'object' ? sotw.link : null
 
-  const latestReviewArtist = getArtistName(latestReview?.artist)
-  const latestNoteArtist = getArtistName(latestNote?.artist)
+  const songOfWeekTitle = sotw?.title || latestNote?.title || 'A fresh pick lands soon'
+  const songOfWeekSubtitle = sotw?.title
+    ? `${sotw.artist}${sotw.context ? ` · ${sotw.context}` : ''}`
+    : getArtistName(latestNote?.artist)
+      ? `${getArtistName(latestNote?.artist)} · listening note`
+      : 'From the listening desk'
+  const songOfWeekMeta = sotw?.title
+    ? 'Selected this week'
+    : latestNote
+      ? `Logged ${formatDate(latestNote.listenedOn)}`
+      : 'Check back after the next listen'
+  const songOfWeekHref = sotw?.externalUrl
+    || (sotwLinkedReview ? `/reviews/${sotwLinkedReview.slug}/` : null)
+    || (latestNote ? `/notes/${latestNote.slug}/` : '/reviews/')
 
-  const songOfWeekTitle =
-    standoutTrack ?? latestNote?.title ?? 'A fresh pick lands soon'
-  const songOfWeekSubtitle =
-    hasTrackPick && latestReview
-      ? `${latestReviewArtist} · from ${latestReview.title}`
-      : latestNoteArtist
-        ? `${latestNoteArtist} · listening note`
-        : 'From the listening desk'
-  const songOfWeekMeta =
-    hasTrackPick && latestReview
-      ? `Selected this week · ${formatDate(latestReview.reviewDate)}`
-      : latestNote
-        ? `Logged ${formatDate(latestNote.listenedOn)}`
-        : 'Check back after the next listen'
-  const songOfWeekHref =
-    hasTrackPick && latestReview
-      ? `/reviews/${latestReview.slug}/`
-      : latestNote
-        ? `/notes/${latestNote.slug}/`
-        : '/reviews/'
+  // Listening Now — from Site Settings, with auto-fallback
+  const nl = siteSettings?.nowListening
+  const nlLinkedDoc: any = nl?.link?.value && typeof nl.link.value === 'object' ? nl.link.value : null
+  const nlCollection = nl?.link?.relationTo
 
-  // Listening Now
-  const noteTs = latestNote ? new Date(latestNote.listenedOn).valueOf() : 0
-  const playlistTs = latestPlaylist ? new Date(latestPlaylist.publishedOn).valueOf() : 0
-
-  const nowListening =
-    playlistTs > noteTs && latestPlaylist
+  const nowListening = nl?.title
+    ? {
+        title: nl.title,
+        subtitle: nl.subtitle || 'On repeat',
+        meta: 'Right now',
+        href: nl.externalUrl
+          || (nlLinkedDoc && nlCollection ? `/${nlCollection}/${nlLinkedDoc.slug}/` : '/reviews/'),
+        cta: nl.externalUrl ? 'Listen' : 'Read more',
+      }
+    : latestPlaylist
       ? {
           title: latestPlaylist.headline || latestPlaylist.title,
           subtitle: `${latestPlaylist.platform} playlist`,
@@ -182,26 +182,18 @@ export default async function HomePage() {
       : latestNote
         ? {
             title: latestNote.headline || latestNote.title,
-            subtitle: latestNoteArtist || 'Listening note',
+            subtitle: getArtistName(latestNote?.artist) || 'Listening note',
             meta: `Logged ${formatDate(latestNote.listenedOn)}`,
             href: `/notes/${latestNote.slug}/`,
             cta: 'Read note',
           }
-        : latestReview
-          ? {
-              title: getDisplayTitle(latestReview),
-              subtitle: 'Latest album review',
-              meta: `Reviewed ${formatDate(latestReview.reviewDate)}`,
-              href: `/reviews/${latestReview.slug}/`,
-              cta: 'Read review',
-            }
-          : {
-              title: 'No listen logged yet',
-              subtitle: 'Music in motion',
-              meta: 'New updates coming soon',
-              href: '/archive/',
-              cta: 'Browse archive',
-            }
+        : {
+            title: 'No listen logged yet',
+            subtitle: 'Music in motion',
+            meta: 'New updates coming soon',
+            href: '/archive/',
+            cta: 'Browse archive',
+          }
 
   // Format links grid
   const formatLinks = [
@@ -233,7 +225,7 @@ export default async function HomePage() {
 
   /* ── Pinned + latest reviews ── */
   const pinnedReviews = reviews.filter((r: any) => r.pinned).slice(0, 2)
-  const latestReviews = reviews.filter((r: any) => !r.pinned).slice(0, 3)
+  const latestReviews = reviews.filter((r: any) => !r.pinned).slice(0, 4)
 
   /* ── From the Field ── */
   const latestGig: any = gigs[0]

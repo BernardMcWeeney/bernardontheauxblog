@@ -6,9 +6,30 @@ import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
 export const metadata = {
-  title: 'Bernard On The Aux',
+  metadataBase: new URL('https://bernardontheaux.com'),
+  title: {
+    default: 'Bernard On The Aux',
+    template: '%s',
+  },
   description:
     'A personal, passion-driven music review and listening log. Album reviews, gig diaries, deep dives, playlists, and notes.',
+  openGraph: {
+    type: 'website',
+    siteName: 'Bernard On The Aux',
+    locale: 'en_IE',
+  },
+  twitter: {
+    card: 'summary',
+  },
+  alternates: {
+    types: {
+      'application/rss+xml': '/rss.xml',
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
