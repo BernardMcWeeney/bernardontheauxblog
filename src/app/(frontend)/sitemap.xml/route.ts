@@ -1,6 +1,8 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
+export const dynamic = 'force-dynamic'
+
 const SITE_URL = 'https://bernardontheaux.com'
 
 export async function GET() {
