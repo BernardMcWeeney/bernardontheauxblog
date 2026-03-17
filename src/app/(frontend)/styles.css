@@ -243,13 +243,12 @@ p { margin: 0 0 1rem; }
 .hero-slide {
   flex: 0 0 100%;
   position: relative;
-  min-height: 340px;
 }
 
 .hero-slide-link {
   display: grid;
   grid-template-columns: 340px 1fr;
-  min-height: 340px;
+  height: 340px;
   color: #fff;
 }
 .hero-slide-link:hover { color: #fff; }
@@ -284,9 +283,10 @@ p { margin: 0 0 1rem; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 2.5rem;
+  padding: 2rem 2.5rem;
   background: var(--ink);
   color: #fff;
+  overflow: hidden;
 }
 
 .hero-slide-pill {
@@ -850,7 +850,7 @@ p { margin: 0 0 1rem; }
   border-radius: var(--radius-lg);
   overflow: hidden;
   margin-bottom: 2rem;
-  min-height: 340px;
+  height: 340px;
   background: var(--ink);
 }
 
