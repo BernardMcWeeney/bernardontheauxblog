@@ -5,7 +5,7 @@ export const Reviews: CollectionConfig = {
   slug: 'reviews',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'artist', 'rating', 'reviewDate', 'published'],
+    defaultColumns: ['cover', 'title', 'artist', 'rating', 'reviewDate', 'published'],
     livePreview: {
       url: ({ data }) => {
         return `/reviews/${data?.slug || ''}`

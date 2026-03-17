@@ -18,6 +18,7 @@ import { Gigs } from './collections/Gigs'
 import { DeepDives } from './collections/DeepDives'
 import { Playlists } from './collections/Playlists'
 import { Notes } from './collections/Notes'
+import { Songs } from './collections/Songs'
 import { Subscribers } from './collections/Subscribers'
 import { SiteSettings } from './globals/SiteSettings'
 
@@ -79,14 +80,14 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Artists, Labels, Reviews, Gigs, DeepDives, Playlists, Notes, Subscribers],
+  collections: [Users, Media, Artists, Labels, Reviews, Songs, Gigs, DeepDives, Playlists, Notes, Subscribers],
   globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: sqliteD1Adapter({ binding: cloudflare.env.D1, push: false }),
+  db: sqliteD1Adapter({ binding: cloudflare.env.D1, push: true }),
   logger: isProduction ? cloudflareLogger : undefined,
   plugins: [
     r2Storage({

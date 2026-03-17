@@ -106,7 +106,7 @@ export default async function HomePage() {
     .slice(0, 10)
 
   /* ── Site Settings (editorial picks) ── */
-  const siteSettings: any = await payload.findGlobal({ slug: 'site-settings' as any }).catch((): null => null)
+  const siteSettings: any = await payload.findGlobal({ slug: 'site-settings' as any, depth: 3 }).catch((): null => null)
 
   /* ── Signal board data ── */
   const latestReview: any = reviews[0]
@@ -138,38 +138,41 @@ export default async function HomePage() {
       )
     : 'No reviews yet'
 
-  // Song of the Week — from Site Settings, with auto-fallback
+  // Song of the Week — from Site Settings song relationship, with auto-fallback
   const sotw = siteSettings?.songOfTheWeek
-  const sotwLinkedReview: any = sotw?.link && typeof sotw.link === 'object' ? sotw.link : null
+  const sotwSong: any = sotw?.song && typeof sotw.song === 'object' ? sotw.song : null
+  const sotwArtist = sotwSong ? getArtistName(sotwSong.artist) : null
+  const sotwAlbum: any = sotwSong?.album && typeof sotwSong.album === 'object' ? sotwSong.album : null
 
-  const songOfWeekTitle = sotw?.title || latestNote?.title || 'A fresh pick lands soon'
-  const songOfWeekSubtitle = sotw?.title
-    ? `${sotw.artist}${sotw.context ? ` · ${sotw.context}` : ''}`
+  const songOfWeekTitle = sotwSong?.title || latestNote?.title || 'A fresh pick lands soon'
+  const songOfWeekSubtitle = sotwSong
+    ? `${sotwArtist || 'Unknown artist'}${sotw.context ? ` · ${sotw.context}` : sotwAlbum ? ` · from ${sotwAlbum.title}` : ''}`
     : getArtistName(latestNote?.artist)
       ? `${getArtistName(latestNote?.artist)} · listening note`
       : 'From the listening desk'
-  const songOfWeekMeta = sotw?.title
+  const songOfWeekMeta = sotwSong
     ? 'Selected this week'
     : latestNote
       ? `Logged ${formatDate(latestNote.listenedOn)}`
       : 'Check back after the next listen'
-  const songOfWeekHref = sotw?.externalUrl
-    || (sotwLinkedReview ? `/reviews/${sotwLinkedReview.slug}/` : null)
+  const songOfWeekHref = sotwSong?.spotifyUrl || sotwSong?.youtubeUrl
+    || (sotwAlbum ? `/reviews/${sotwAlbum.slug}/` : null)
     || (latestNote ? `/notes/${latestNote.slug}/` : '/reviews/')
 
-  // Listening Now — from Site Settings, with auto-fallback
+  // Listening Now — from Site Settings song relationship, with auto-fallback
   const nl = siteSettings?.nowListening
-  const nlLinkedDoc: any = nl?.link?.value && typeof nl.link.value === 'object' ? nl.link.value : null
-  const nlCollection = nl?.link?.relationTo
+  const nlSong: any = nl?.song && typeof nl.song === 'object' ? nl.song : null
+  const nlArtist = nlSong ? getArtistName(nlSong.artist) : null
+  const nlAlbum: any = nlSong?.album && typeof nlSong.album === 'object' ? nlSong.album : null
 
-  const nowListening = nl?.title
+  const nowListening = nlSong
     ? {
-        title: nl.title,
-        subtitle: nl.subtitle || 'On repeat',
+        title: nlSong.title,
+        subtitle: nl.subtitle || nlArtist || 'On repeat',
         meta: 'Right now',
-        href: nl.externalUrl
-          || (nlLinkedDoc && nlCollection ? `/${nlCollection}/${nlLinkedDoc.slug}/` : '/reviews/'),
-        cta: nl.externalUrl ? 'Listen' : 'Read more',
+        href: nl.externalUrl || nlSong.spotifyUrl || nlSong.youtubeUrl
+          || (nlAlbum ? `/reviews/${nlAlbum.slug}/` : '/reviews/'),
+        cta: nl.externalUrl || nlSong.spotifyUrl || nlSong.youtubeUrl ? 'Listen' : 'Read more',
       }
     : latestPlaylist
       ? {

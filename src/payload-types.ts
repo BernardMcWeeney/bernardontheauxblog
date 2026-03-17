@@ -72,6 +72,7 @@ export interface Config {
     artists: Artist;
     labels: Label;
     reviews: Review;
+    songs: Song;
     gigs: Gig;
     'deep-dives': DeepDive;
     playlists: Playlist;
@@ -89,6 +90,7 @@ export interface Config {
     artists: ArtistsSelect<false> | ArtistsSelect<true>;
     labels: LabelsSelect<false> | LabelsSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
+    songs: SongsSelect<false> | SongsSelect<true>;
     gigs: GigsSelect<false> | GigsSelect<true>;
     'deep-dives': DeepDivesSelect<false> | DeepDivesSelect<true>;
     playlists: PlaylistsSelect<false> | PlaylistsSelect<true>;
@@ -258,6 +260,37 @@ export interface Review {
      */
     image?: (number | null) | Media;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "songs".
+ */
+export interface Song {
+  id: number;
+  title: string;
+  artist: number | Artist;
+  /**
+   * Link to album review if one exists
+   */
+  album?: (number | null) | Review;
+  /**
+   * Release date (optional)
+   */
+  released?: string | null;
+  /**
+   * Spotify link
+   */
+  spotifyUrl?: string | null;
+  /**
+   * YouTube link
+   */
+  youtubeUrl?: string | null;
+  /**
+   * Apple Music link
+   */
+  appleMusicUrl?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -507,6 +540,10 @@ export interface PayloadLockedDocument {
         value: number | Review;
       } | null)
     | ({
+        relationTo: 'songs';
+        value: number | Song;
+      } | null)
+    | ({
         relationTo: 'gigs';
         value: number | Gig;
       } | null)
@@ -661,6 +698,21 @@ export interface ReviewsSelect<T extends boolean = true> {
         description?: T;
         image?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "songs_select".
+ */
+export interface SongsSelect<T extends boolean = true> {
+  title?: T;
+  artist?: T;
+  album?: T;
+  released?: T;
+  spotifyUrl?: T;
+  youtubeUrl?: T;
+  appleMusicUrl?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -834,52 +886,27 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface SiteSetting {
   id: number;
-  songOfTheWeek: {
+  songOfTheWeek?: {
     /**
-     * Song title
+     * Pick a song from the Songs collection
      */
-    title: string;
-    artist: string;
+    song?: (number | null) | Song;
     /**
-     * e.g. "from People Watching" or "latest single"
+     * e.g. "from People Watching" or "on repeat this week"
      */
     context?: string | null;
-    /**
-     * Link to a review (optional)
-     */
-    link?: (number | null) | Review;
-    /**
-     * Or link to Spotify/YouTube/etc instead
-     */
-    externalUrl?: string | null;
   };
-  nowListening: {
+  nowListening?: {
     /**
-     * What you're listening to
+     * What you're listening to right now
      */
-    title: string;
+    song?: (number | null) | Song;
     /**
-     * e.g. artist name or context
+     * e.g. "On repeat" or "Late night vibes"
      */
     subtitle?: string | null;
     /**
-     * Link to related content (optional)
-     */
-    link?:
-      | ({
-          relationTo: 'reviews';
-          value: number | Review;
-        } | null)
-      | ({
-          relationTo: 'playlists';
-          value: number | Playlist;
-        } | null)
-      | ({
-          relationTo: 'notes';
-          value: number | Note;
-        } | null);
-    /**
-     * Or link to Spotify/YouTube/etc
+     * Override link to Spotify/YouTube/etc
      */
     externalUrl?: string | null;
   };
@@ -894,18 +921,14 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   songOfTheWeek?:
     | T
     | {
-        title?: T;
-        artist?: T;
+        song?: T;
         context?: T;
-        link?: T;
-        externalUrl?: T;
       };
   nowListening?:
     | T
     | {
-        title?: T;
+        song?: T;
         subtitle?: T;
-        link?: T;
         externalUrl?: T;
       };
   updatedAt?: T;
