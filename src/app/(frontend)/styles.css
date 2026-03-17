@@ -248,7 +248,7 @@ p { margin: 0 0 1rem; }
 
 .hero-slide-link {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 340px 1fr;
   min-height: 340px;
   color: #fff;
 }
@@ -259,7 +259,6 @@ p { margin: 0 0 1rem; }
   overflow: hidden;
   background: #1a1a1a;
   aspect-ratio: 1 / 1;
-  max-height: 420px;
 }
 .hero-slide-media img {
   width: 100%;
@@ -285,7 +284,7 @@ p { margin: 0 0 1rem; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 2.5rem 2.5rem;
+  padding: 2.5rem;
   background: var(--ink);
   color: #fff;
 }
