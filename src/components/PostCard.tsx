@@ -101,7 +101,7 @@ export default function PostCard({
       <a className="card-link" href={href}>
         <div className={mediaClasses}>
           {coverUrl ? (
-            <Image src={cfImageUrl(coverUrl, { width: 400, height: 400 })} alt={coverAlt || ''} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: 'cover' }} />
+            <Image src={cfImageUrl(coverUrl, { width: 264, height: 264 })} alt={coverAlt || ''} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: 'cover' }} />
           ) : (
             <div className="card-placeholder">
               <Icon name={resolvedIcon as any} size={48} className="placeholder-icon" />

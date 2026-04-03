@@ -72,7 +72,7 @@ export default function HeroSlider({ posts }: HeroSliderProps) {
                 <div className="hero-slide-media">
                   {post.cover ? (
                     <Image
-                      src={cfImageUrl(post.cover, { width: 680, height: 680 })}
+                      src={cfImageUrl(post.cover, { width: 340, height: 340 })}
                       alt=""
                       fill
                       sizes="(max-width: 768px) 100vw, 340px"
