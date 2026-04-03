@@ -18,10 +18,9 @@
   --radius-lg: 5px;
   --max-width: 1120px;
 
-  /* next/font overrides these via class on <html>; these are fallbacks */
-  --font-heading: Georgia, serif;
-  --font-body: 'Segoe UI', sans-serif;
-  --font-label: 'Trebuchet MS', sans-serif;
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Manrope', 'Segoe UI', sans-serif;
+  --font-label: 'Space Grotesk', 'Trebuchet MS', sans-serif;
 }
 
 * { box-sizing: border-box; }
