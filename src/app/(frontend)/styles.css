@@ -18,9 +18,10 @@
   --radius-lg: 5px;
   --max-width: 1120px;
 
-  --font-heading: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Manrope', 'Segoe UI', sans-serif;
-  --font-label: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+  /* next/font overrides these via class on <html>; these are fallbacks */
+  --font-heading: Georgia, serif;
+  --font-body: 'Segoe UI', sans-serif;
+  --font-label: 'Trebuchet MS', sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -382,6 +383,17 @@ p { margin: 0 0 1rem; }
   cursor: pointer;
   padding: 0;
   transition: background 0.15s ease;
+  /* Accessible 48px touch target via ::after, no layout shift */
+  position: relative;
+}
+.hero-slider-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
 }
 .hero-slider-dot.active {
   background: var(--accent);

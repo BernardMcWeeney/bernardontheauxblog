@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import Icon from './Icon';
+import { cfImageUrl } from '@/utils/cfImage';
 
 interface HeroSlide {
   type?: string;
@@ -65,12 +66,19 @@ export default function HeroSlider({ posts }: HeroSliderProps) {
           id="slider-track"
           style={{ transform: `translateX(-${current * 100}%)` }}
         >
-          {posts.map((post) => (
+          {posts.map((post, index) => (
             <article key={post.href} className="hero-slide">
               <a className="hero-slide-link" href={post.href}>
                 <div className="hero-slide-media">
                   {post.cover ? (
-                    <Image src={post.cover} alt="" fill sizes="100vw" style={{ objectFit: 'cover' }} />
+                    <Image
+                      src={cfImageUrl(post.cover, { width: 680, height: 680 })}
+                      alt=""
+                      fill
+                      sizes="(max-width: 768px) 100vw, 340px"
+                      style={{ objectFit: 'cover' }}
+                      priority={index === 0}
+                    />
                   ) : (
                     <div className="hero-slide-placeholder">
                       <Icon name={post.icon as any} size={56} />

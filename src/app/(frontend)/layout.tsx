@@ -1,9 +1,31 @@
 import React from 'react'
 import './styles.css'
+import { Cormorant_Garamond, Manrope, Space_Grotesk } from 'next/font/google'
 
 export const dynamic = 'force-dynamic'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  display: 'swap',
+  variable: '--font-heading',
+})
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
+  variable: '--font-body',
+})
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
+  variable: '--font-label',
+})
 
 export const metadata = {
   metadataBase: new URL('https://bernardontheaux.com'),
@@ -34,14 +56,8 @@ export const metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${cormorant.variable} ${manrope.variable} ${spaceGrotesk.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap"
-          rel="stylesheet"
-        />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link
           rel="alternate"
