@@ -73,8 +73,11 @@ export default function PlaylistDetail({ initialData, serverURL }: { initialData
                   src={playlist.embedUrl}
                   title="Playlist embed"
                   width="100%"
-                  height="380"
+                  height="660"
+                  frameBorder={0}
                   loading="lazy"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  style={{ borderRadius: '12px' }}
                 />
               </div>
             )}

@@ -312,7 +312,7 @@ export interface Song {
    */
   spotifyUrl?: string | null;
   /**
-   * Spotify embed URL (e.g. https://open.spotify.com/embed/track/...)
+   * Paste the Spotify embed iframe or URL — the src will be extracted automatically
    */
   spotifyEmbedUrl?: string | null;
   /**
@@ -437,6 +437,9 @@ export interface Playlist {
   publishedOn: string;
   platform: 'Spotify' | 'Apple Music' | 'YouTube' | 'Tidal' | 'Bandcamp' | 'Other';
   playlistUrl: string;
+  /**
+   * Paste the Spotify/Apple Music embed iframe or URL — the src will be extracted automatically
+   */
   embedUrl?: string | null;
   mood?: string | null;
   duration?: number | null;

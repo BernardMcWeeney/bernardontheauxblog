@@ -264,90 +264,62 @@ export default async function HomePage() {
         </div>
 
         <div className="signal-grid">
-          <article className="signal-card">
-            <div className="signal-top">
-              <p className="signal-label">Song of the Week</p>
-              <span className="signal-icon" aria-hidden="true">
-                <Icon name="music" />
-              </span>
-            </div>
+          <a className="signal-card" href={songOfWeekHref}>
             {songOfWeekCover && (
-              <div className="signal-art">
-                <Image src={cfImageUrl(songOfWeekCover, { width: 120, height: 120 })} alt="" width={120} height={120} style={{ objectFit: 'cover', borderRadius: 'var(--radius)' }} />
+              <div className="signal-bg">
+                <Image src={cfImageUrl(songOfWeekCover, { width: 400, height: 400 })} alt="" fill sizes="33vw" style={{ objectFit: 'cover' }} />
               </div>
             )}
-            <h3 className="signal-title">{songOfWeekTitle}</h3>
-            <p className="signal-subtitle">{songOfWeekSubtitle}</p>
-            <p className="signal-meta">{songOfWeekMeta}</p>
-            {songOfWeekEmbed && (
-              <div className="signal-embed">
-                <iframe src={songOfWeekEmbed} title="Song of the Week" width="100%" height="80" loading="lazy" allow="encrypted-media" />
-              </div>
-            )}
-            <a className="signal-link" href={songOfWeekHref}>
-              Open pick
-            </a>
-          </article>
-
-          <article className="signal-card">
-            <div className="signal-top">
-              <p className="signal-label">Album of the Month</p>
-              <span className="signal-icon" aria-hidden="true">
-                <Icon name="review" />
-              </span>
+            <div className="signal-content">
+              <p className="signal-label">Song of the Week</p>
+              <h3 className="signal-title">{songOfWeekTitle}</h3>
+              <p className="signal-subtitle">{songOfWeekSubtitle}</p>
+              <p className="signal-meta">{songOfWeekMeta}</p>
+              <span className="signal-link">Open pick</span>
             </div>
+          </a>
+
+          <a className="signal-card" href={albumOfMonth ? `/reviews/${albumOfMonth.slug}/` : '/reviews/'}>
             {albumOfMonth && getCoverUrl(albumOfMonth.cover) && (
-              <div className="signal-art">
-                <Image src={cfImageUrl(getCoverUrl(albumOfMonth.cover)!, { width: 120, height: 120 })} alt="" width={120} height={120} style={{ objectFit: 'cover', borderRadius: 'var(--radius)' }} />
+              <div className="signal-bg">
+                <Image src={cfImageUrl(getCoverUrl(albumOfMonth.cover)!, { width: 400, height: 400 })} alt="" fill sizes="33vw" style={{ objectFit: 'cover' }} />
               </div>
             )}
-            <h3 className="signal-title">
-              {albumOfMonth
-                ? getDisplayTitle(albumOfMonth)
-                : 'No album selected yet'}
-            </h3>
-            <p className="signal-subtitle">
-              {albumOfMonth
-                ? `${albumMonthLabel} pick · ${albumOfMonth.rating}/10`
-                : 'Waiting on the next review cycle'}
-            </p>
-            <p className="signal-meta">
-              {albumOfMonth
-                ? `Reviewed ${formatDate(albumOfMonth.reviewDate)}`
-                : 'Keep listening'}
-            </p>
-            <a
-              className="signal-link"
-              href={albumOfMonth ? `/reviews/${albumOfMonth.slug}/` : '/reviews/'}
-            >
-              Read review
-            </a>
-          </article>
-
-          <article className="signal-card">
-            <div className="signal-top">
-              <p className="signal-label">Listening Now</p>
-              <span className="signal-icon" aria-hidden="true">
-                <Icon name="headphones" />
-              </span>
+            <div className="signal-content">
+              <p className="signal-label">Album of the Month</p>
+              <h3 className="signal-title">
+                {albumOfMonth
+                  ? getDisplayTitle(albumOfMonth)
+                  : 'No album selected yet'}
+              </h3>
+              <p className="signal-subtitle">
+                {albumOfMonth
+                  ? `${albumMonthLabel} pick · ${albumOfMonth.rating}/10`
+                  : 'Waiting on the next review cycle'}
+              </p>
+              <p className="signal-meta">
+                {albumOfMonth
+                  ? `Reviewed ${formatDate(albumOfMonth.reviewDate)}`
+                  : 'Keep listening'}
+              </p>
+              <span className="signal-link">Read review</span>
             </div>
+          </a>
+
+          <a className="signal-card" href={nowListening.href}>
             {nowListening.cover && (
-              <div className="signal-art">
-                <Image src={cfImageUrl(nowListening.cover, { width: 120, height: 120 })} alt="" width={120} height={120} style={{ objectFit: 'cover', borderRadius: 'var(--radius)' }} />
+              <div className="signal-bg">
+                <Image src={cfImageUrl(nowListening.cover, { width: 400, height: 400 })} alt="" fill sizes="33vw" style={{ objectFit: 'cover' }} />
               </div>
             )}
-            <h3 className="signal-title">{nowListening.title}</h3>
-            <p className="signal-subtitle">{nowListening.subtitle}</p>
-            <p className="signal-meta">{nowListening.meta}</p>
-            {nowListening.embed && (
-              <div className="signal-embed">
-                <iframe src={nowListening.embed} title="Listening now" width="100%" height="80" loading="lazy" allow="encrypted-media" />
-              </div>
-            )}
-            <a className="signal-link" href={nowListening.href}>
-              {nowListening.cta}
-            </a>
-          </article>
+            <div className="signal-content">
+              <p className="signal-label">Listening Now</p>
+              <h3 className="signal-title">{nowListening.title}</h3>
+              <p className="signal-subtitle">{nowListening.subtitle}</p>
+              <p className="signal-meta">{nowListening.meta}</p>
+              <span className="signal-link">{nowListening.cta}</span>
+            </div>
+          </a>
         </div>
 
         <div className="format-grid" aria-label="Music sections">
