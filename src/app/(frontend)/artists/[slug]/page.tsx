@@ -156,7 +156,7 @@ export default async function ArtistDetailPage({
         <div className="artist-profile">
           <div className="artist-profile-image">
             {imageUrl ? (
-              <Image src={cfImageUrl(imageUrl, { width: 280, height: 280 })} alt={imageAlt} fill sizes="280px" style={{ objectFit: 'cover' }} />
+              <Image src={cfImageUrl(imageUrl, { width: 340, height: 340 })} alt={imageAlt} fill sizes="(max-width: 768px) 100vw, 340px" style={{ objectFit: 'cover' }} />
             ) : (
               <div className="artist-profile-placeholder">
                 <Icon name="music" size={56} />

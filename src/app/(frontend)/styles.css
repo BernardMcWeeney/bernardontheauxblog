@@ -977,21 +977,18 @@ p { margin: 0 0 1rem; }
 
 /* Artist profile page */
 .artist-profile {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 0;
   margin-bottom: 2rem;
-  padding: 2rem;
   background: var(--ink);
   border-radius: var(--radius-lg);
   border: 2px solid var(--ink);
+  overflow: hidden;
 }
 .artist-profile-image {
   position: relative;
-  width: 180px;
-  height: 180px;
-  flex-shrink: 0;
-  border-radius: 50%;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   background: #1a1a1a;
 }
@@ -1009,6 +1006,10 @@ p { margin: 0 0 1rem; }
   color: #fff;
 }
 .artist-profile-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 2.5rem;
   color: #fff;
 }
 .artist-profile-name {
@@ -1104,16 +1105,13 @@ p { margin: 0 0 1rem; }
 
 @media (max-width: 768px) {
   .artist-profile {
-    flex-direction: column;
-    text-align: center;
-    padding: 1.5rem;
+    grid-template-columns: 1fr;
   }
   .artist-profile-image {
-    width: 140px;
-    height: 140px;
+    max-height: 360px;
   }
-  .artist-profile-stats {
-    justify-content: center;
+  .artist-profile-info {
+    padding: 1.5rem;
   }
 }
 

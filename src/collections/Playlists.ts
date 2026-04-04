@@ -32,7 +32,7 @@ export const Playlists: CollectionConfig = {
       { label: 'Other', value: 'Other' },
     ]},
     { name: 'playlistUrl', type: 'text', required: true },
-    { name: 'embedUrl', type: 'text' },
+    { name: 'embedUrl', type: 'text', admin: { description: 'Paste the Spotify/Apple Music embed iframe or URL — the src will be extracted automatically' } },
     { name: 'mood', type: 'text' },
     { name: 'duration', type: 'number' },
     { name: 'tags', type: 'text', hasMany: true },
@@ -53,6 +53,12 @@ export const Playlists: CollectionConfig = {
             .toLowerCase()
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/^-|-$/g, '')
+        }
+
+        // Extract src from iframe paste for embed URL
+        if (data.embedUrl) {
+          const match = data.embedUrl.match(/src=["']([^"']+)["']/)
+          if (match) data.embedUrl = match[1]
         }
 
         // Auto-generate excerpt from content

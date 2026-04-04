@@ -108,7 +108,7 @@ export default async function HomePage() {
     .slice(0, 10)
 
   /* ── Site Settings (editorial picks) ── */
-  const siteSettings: any = await payload.findGlobal({ slug: 'site-settings' as any, depth: 3 }).catch((): null => null)
+  const siteSettings: any = await payload.findGlobal({ slug: 'site-settings' as any, depth: 4 }).catch((): null => null)
 
   /* ── Signal board data ── */
   const latestReview: any = reviews[0]
@@ -296,6 +296,11 @@ export default async function HomePage() {
                 <Icon name="review" />
               </span>
             </div>
+            {albumOfMonth && getCoverUrl(albumOfMonth.cover) && (
+              <div className="signal-art">
+                <Image src={cfImageUrl(getCoverUrl(albumOfMonth.cover)!, { width: 120, height: 120 })} alt="" width={120} height={120} style={{ objectFit: 'cover', borderRadius: 'var(--radius)' }} />
+              </div>
+            )}
             <h3 className="signal-title">
               {albumOfMonth
                 ? getDisplayTitle(albumOfMonth)
