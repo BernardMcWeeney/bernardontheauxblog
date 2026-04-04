@@ -77,7 +77,7 @@ export default function HeroSlider({ posts }: HeroSliderProps) {
                       fill
                       sizes="(max-width: 768px) 100vw, 340px"
                       style={{ objectFit: 'cover' }}
-                      priority={index === 0}
+                      {...(index === 0 ? { loading: 'eager', fetchPriority: 'high' } : { loading: 'lazy' })}
                     />
                   ) : (
                     <div className="hero-slide-placeholder">

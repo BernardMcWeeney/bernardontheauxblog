@@ -191,6 +191,30 @@ export interface Artist {
   slug: string;
   bio?: string | null;
   image?: (number | null) | Media;
+  /**
+   * Where the artist is from (e.g. "Newcastle, England")
+   */
+  origin?: string | null;
+  /**
+   * Year formed or born (e.g. "2017" or "1976")
+   */
+  founded?: string | null;
+  /**
+   * Primary genre (e.g. "Indie Rock", "Post-Punk")
+   */
+  genre?: string | null;
+  /**
+   * Current or primary label
+   */
+  label?: (number | null) | Label;
+  /**
+   * Spotify artist link
+   */
+  spotifyUrl?: string | null;
+  /**
+   * Official website
+   */
+  websiteUrl?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -276,13 +300,21 @@ export interface Song {
    */
   album?: (number | null) | Review;
   /**
+   * Album art / song artwork
+   */
+  cover?: (number | null) | Media;
+  /**
    * Release date (optional)
    */
   released?: string | null;
   /**
-   * Spotify link
+   * Spotify track link (e.g. https://open.spotify.com/track/...)
    */
   spotifyUrl?: string | null;
+  /**
+   * Spotify embed URL (e.g. https://open.spotify.com/embed/track/...)
+   */
+  spotifyEmbedUrl?: string | null;
   /**
    * YouTube link
    */
@@ -652,6 +684,12 @@ export interface ArtistsSelect<T extends boolean = true> {
   slug?: T;
   bio?: T;
   image?: T;
+  origin?: T;
+  founded?: T;
+  genre?: T;
+  label?: T;
+  spotifyUrl?: T;
+  websiteUrl?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -709,8 +747,10 @@ export interface SongsSelect<T extends boolean = true> {
   title?: T;
   artist?: T;
   album?: T;
+  cover?: T;
   released?: T;
   spotifyUrl?: T;
+  spotifyEmbedUrl?: T;
   youtubeUrl?: T;
   appleMusicUrl?: T;
   updatedAt?: T;

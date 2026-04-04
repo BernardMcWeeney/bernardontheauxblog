@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import HeroSlider from '@/components/HeroSlider'
@@ -6,6 +7,7 @@ import PostCard from '@/components/PostCard'
 import Icon from '@/components/Icon'
 import { formatDate } from '@/utils/format'
 import { getArtistName, getDisplayTitle } from '@/utils/artist'
+import { cfImageUrl } from '@/utils/cfImage'
 
 /* ── helpers ── */
 
@@ -158,6 +160,8 @@ export default async function HomePage() {
   const songOfWeekHref = sotwSong?.spotifyUrl || sotwSong?.youtubeUrl
     || (sotwAlbum ? `/reviews/${sotwAlbum.slug}/` : null)
     || (latestNote ? `/notes/${latestNote.slug}/` : '/reviews/')
+  const songOfWeekCover = sotwSong ? getCoverUrl(sotwSong.cover) || getCoverUrl(sotwAlbum?.cover) : getCoverUrl(latestNote?.cover)
+  const songOfWeekEmbed = sotwSong?.spotifyEmbedUrl || null
 
   // Listening Now — from Site Settings song relationship, with auto-fallback
   const nl = siteSettings?.nowListening
@@ -173,6 +177,8 @@ export default async function HomePage() {
         href: nl.externalUrl || nlSong.spotifyUrl || nlSong.youtubeUrl
           || (nlAlbum ? `/reviews/${nlAlbum.slug}/` : '/reviews/'),
         cta: nl.externalUrl || nlSong.spotifyUrl || nlSong.youtubeUrl ? 'Listen' : 'Read more',
+        cover: getCoverUrl(nlSong.cover) || getCoverUrl(nlAlbum?.cover),
+        embed: nlSong.spotifyEmbedUrl || null,
       }
     : latestPlaylist
       ? {
@@ -181,6 +187,8 @@ export default async function HomePage() {
           meta: `Updated ${formatDate(latestPlaylist.publishedOn)}`,
           href: `/playlists/${latestPlaylist.slug}/`,
           cta: 'Open playlist',
+          cover: getCoverUrl(latestPlaylist.cover),
+          embed: latestPlaylist.embedUrl || null,
         }
       : latestNote
         ? {
@@ -189,6 +197,8 @@ export default async function HomePage() {
             meta: `Logged ${formatDate(latestNote.listenedOn)}`,
             href: `/notes/${latestNote.slug}/`,
             cta: 'Read note',
+            cover: getCoverUrl(latestNote.cover),
+            embed: null,
           }
         : {
             title: 'No listen logged yet',
@@ -196,6 +206,8 @@ export default async function HomePage() {
             meta: 'New updates coming soon',
             href: '/archive/',
             cta: 'Browse archive',
+            cover: undefined,
+            embed: null,
           }
 
   // Format links grid
@@ -259,9 +271,19 @@ export default async function HomePage() {
                 <Icon name="music" />
               </span>
             </div>
+            {songOfWeekCover && (
+              <div className="signal-art">
+                <Image src={cfImageUrl(songOfWeekCover, { width: 120, height: 120 })} alt="" width={120} height={120} style={{ objectFit: 'cover', borderRadius: 'var(--radius)' }} />
+              </div>
+            )}
             <h3 className="signal-title">{songOfWeekTitle}</h3>
             <p className="signal-subtitle">{songOfWeekSubtitle}</p>
             <p className="signal-meta">{songOfWeekMeta}</p>
+            {songOfWeekEmbed && (
+              <div className="signal-embed">
+                <iframe src={songOfWeekEmbed} title="Song of the Week" width="100%" height="80" loading="lazy" allow="encrypted-media" />
+              </div>
+            )}
             <a className="signal-link" href={songOfWeekHref}>
               Open pick
             </a>
@@ -304,9 +326,19 @@ export default async function HomePage() {
                 <Icon name="headphones" />
               </span>
             </div>
+            {nowListening.cover && (
+              <div className="signal-art">
+                <Image src={cfImageUrl(nowListening.cover, { width: 120, height: 120 })} alt="" width={120} height={120} style={{ objectFit: 'cover', borderRadius: 'var(--radius)' }} />
+              </div>
+            )}
             <h3 className="signal-title">{nowListening.title}</h3>
             <p className="signal-subtitle">{nowListening.subtitle}</p>
             <p className="signal-meta">{nowListening.meta}</p>
+            {nowListening.embed && (
+              <div className="signal-embed">
+                <iframe src={nowListening.embed} title="Listening now" width="100%" height="80" loading="lazy" allow="encrypted-media" />
+              </div>
+            )}
             <a className="signal-link" href={nowListening.href}>
               {nowListening.cta}
             </a>

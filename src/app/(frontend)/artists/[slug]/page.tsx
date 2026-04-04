@@ -8,6 +8,7 @@ import PostCard from '@/components/PostCard'
 import Icon from '@/components/Icon'
 import { formatDate } from '@/utils/format'
 import { getDisplayTitle } from '@/utils/artist'
+import { cfImageUrl } from '@/utils/cfImage'
 
 function getCoverUrl(cover: any): string | undefined {
   if (!cover) return undefined
@@ -67,7 +68,6 @@ export default async function ArtistDetailPage({
 
   const payload = await getPayload({ config: configPromise })
 
-  // Fetch all content for this artist
   const [reviewsRes, gigsRes, notesRes] = await Promise.all([
     payload.find({
       collection: 'reviews',
@@ -115,6 +115,11 @@ export default async function ArtistDetailPage({
       ? artist.image.alt
       : artist.name
 
+  // Average rating across reviews
+  const avgRating = reviews.length > 0
+    ? (reviews.reduce((sum: number, r: any) => sum + (r.rating || 0), 0) / reviews.length).toFixed(1)
+    : null
+
   const artistJsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -147,35 +152,101 @@ export default async function ArtistDetailPage({
           &larr; All Artists
         </Link>
 
-        {/* Artist hero */}
-        <div className="album-hero">
-          <div className="album-hero-art">
+        {/* Artist profile header */}
+        <div className="artist-profile">
+          <div className="artist-profile-image">
             {imageUrl ? (
-              <Image src={imageUrl} alt={imageAlt} fill sizes="300px" style={{ objectFit: 'cover' }} />
+              <Image src={cfImageUrl(imageUrl, { width: 280, height: 280 })} alt={imageAlt} fill sizes="280px" style={{ objectFit: 'cover' }} />
             ) : (
-              <div className="album-hero-art-placeholder">
+              <div className="artist-profile-placeholder">
                 <Icon name="music" size={56} />
               </div>
             )}
           </div>
 
-          <div className="album-hero-info">
+          <div className="artist-profile-info">
             <span className="album-hero-badge">
               <Icon name="music" size={13} />
               Artist
             </span>
 
-            <h1 className="album-hero-title">{artist.name}</h1>
+            <h1 className="artist-profile-name">{artist.name}</h1>
 
-            <div className="album-hero-meta">
-              <span>{totalContent} {totalContent === 1 ? 'entry' : 'entries'}</span>
-              {reviews.length > 0 && <span>{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</span>}
-              {gigs.length > 0 && <span>{gigs.length} {gigs.length === 1 ? 'gig' : 'gigs'}</span>}
+            <div className="artist-profile-details">
+              {(artist as any).origin && (
+                <span className="artist-detail">
+                  <Icon name="music" size={12} />
+                  {(artist as any).origin}
+                </span>
+              )}
+              {(artist as any).founded && (
+                <span className="artist-detail">
+                  Est. {(artist as any).founded}
+                </span>
+              )}
+              {(artist as any).genre && (
+                <span className="artist-detail">
+                  {(artist as any).genre}
+                </span>
+              )}
+              {typeof (artist as any).label === 'object' && (artist as any).label?.name && (
+                <span className="artist-detail">
+                  {(artist as any).label.name}
+                </span>
+              )}
             </div>
 
-            {artist.bio && <p style={{ marginTop: '1rem', color: 'rgba(255,255,255,0.7)', fontSize: '0.92rem', lineHeight: 1.6 }}>{artist.bio}</p>}
+            <div className="artist-profile-stats">
+              {reviews.length > 0 && (
+                <span className="artist-stat">
+                  <strong>{reviews.length}</strong> {reviews.length === 1 ? 'review' : 'reviews'}
+                </span>
+              )}
+              {gigs.length > 0 && (
+                <span className="artist-stat">
+                  <strong>{gigs.length}</strong> {gigs.length === 1 ? 'gig' : 'gigs'}
+                </span>
+              )}
+              {notes.length > 0 && (
+                <span className="artist-stat">
+                  <strong>{notes.length}</strong> {notes.length === 1 ? 'note' : 'notes'}
+                </span>
+              )}
+              {avgRating && (
+                <span className="artist-stat">
+                  <strong>{avgRating}</strong> avg rating
+                </span>
+              )}
+            </div>
+
+            {((artist as any).spotifyUrl || (artist as any).websiteUrl) && (
+              <div className="artist-profile-links">
+                {(artist as any).spotifyUrl && (
+                  <a href={(artist as any).spotifyUrl} target="_blank" rel="noopener noreferrer" className="artist-ext-link">
+                    Spotify
+                  </a>
+                )}
+                {(artist as any).websiteUrl && (
+                  <a href={(artist as any).websiteUrl} target="_blank" rel="noopener noreferrer" className="artist-ext-link">
+                    Website
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Bio section */}
+        {artist.bio && (
+          <section className="artist-bio">
+            <h2 className="artist-bio-heading">About {artist.name}</h2>
+            <div className="artist-bio-text">
+              {artist.bio.split('\n').filter(Boolean).map((paragraph: string, i: number) => (
+                <p key={i}>{paragraph}</p>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Reviews */}
         {reviews.length > 0 && (
@@ -185,6 +256,7 @@ export default async function ArtistDetailPage({
                 <h2 className="section-title">
                   <Icon name="vinyl" className="title-icon" /> Reviews
                 </h2>
+                <p>Album reviews for {artist.name}.</p>
               </div>
             </div>
             <div className="grid">
@@ -214,6 +286,7 @@ export default async function ArtistDetailPage({
                 <h2 className="section-title">
                   <Icon name="gig" className="title-icon" /> Live
                 </h2>
+                <p>Gig diaries and live experiences.</p>
               </div>
             </div>
             <div className="grid">
@@ -241,6 +314,7 @@ export default async function ArtistDetailPage({
                 <h2 className="section-title">
                   <Icon name="note" className="title-icon" /> Notes
                 </h2>
+                <p>Listening notes and quick takes.</p>
               </div>
             </div>
             <div className="grid">
