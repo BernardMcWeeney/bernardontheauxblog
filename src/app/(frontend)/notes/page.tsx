@@ -52,6 +52,7 @@ export default async function NotesPage() {
             label="Note"
             cover={getCoverUrl(n.cover)}
             pillClass="pill-note"
+            square
           />
         ))}
       </div>

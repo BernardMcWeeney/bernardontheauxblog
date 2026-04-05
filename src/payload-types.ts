@@ -953,6 +953,77 @@ export interface SiteSetting {
      */
     externalUrl?: string | null;
   };
+  albumOfTheMonth?: {
+    /**
+     * Link to a review in the Reviews collection
+     */
+    review?: (number | null) | Review;
+    /**
+     * Short editorial note — why this album, why now
+     */
+    blurb?: string | null;
+  };
+  featuredArtist?: {
+    artist?: (number | null) | Artist;
+    /**
+     * e.g. "Essential listening", "Currently obsessed with"
+     */
+    note?: string | null;
+  };
+  featuredPlaylist?: {
+    playlist?: (number | null) | Playlist;
+    /**
+     * e.g. "Perfect for late nights", "Weekend mood"
+     */
+    note?: string | null;
+  };
+  homepage?: {
+    /**
+     * Short tagline shown in the hero — e.g. "Music writing from the listening room"
+     */
+    tagline?: string | null;
+    heroEnabled?: boolean | null;
+    /**
+     * Label for the "On Rotation" picks section
+     */
+    onRotationLabel?: string | null;
+    /**
+     * Label for the latest content section
+     */
+    latestSectionLabel?: string | null;
+    showSubscribeBanner?: boolean | null;
+    /**
+     * Heading for the newsletter subscribe banner
+     */
+    subscribeBannerHeading?: string | null;
+    /**
+     * Subtext beneath the subscribe heading
+     */
+    subscribeBannerSubtext?: string | null;
+  };
+  social?: {
+    spotify?: string | null;
+    instagram?: string | null;
+    twitter?: string | null;
+    letterboxd?: string | null;
+    lastfm?: string | null;
+    rateyourmusic?: string | null;
+    bluesky?: string | null;
+  };
+  seo?: {
+    /**
+     * Default meta description used on the homepage and as a fallback
+     */
+    siteDescription?: string | null;
+    /**
+     * Used when sharing homepage links on social media
+     */
+    ogImage?: (number | null) | Media;
+    /**
+     * e.g. https://bernardontheaux.com — used for sitemap and canonical URLs
+     */
+    canonicalDomain?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -973,6 +1044,53 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         song?: T;
         subtitle?: T;
         externalUrl?: T;
+      };
+  albumOfTheMonth?:
+    | T
+    | {
+        review?: T;
+        blurb?: T;
+      };
+  featuredArtist?:
+    | T
+    | {
+        artist?: T;
+        note?: T;
+      };
+  featuredPlaylist?:
+    | T
+    | {
+        playlist?: T;
+        note?: T;
+      };
+  homepage?:
+    | T
+    | {
+        tagline?: T;
+        heroEnabled?: T;
+        onRotationLabel?: T;
+        latestSectionLabel?: T;
+        showSubscribeBanner?: T;
+        subscribeBannerHeading?: T;
+        subscribeBannerSubtext?: T;
+      };
+  social?:
+    | T
+    | {
+        spotify?: T;
+        instagram?: T;
+        twitter?: T;
+        letterboxd?: T;
+        lastfm?: T;
+        rateyourmusic?: T;
+        bluesky?: T;
+      };
+  seo?:
+    | T
+    | {
+        siteDescription?: T;
+        ogImage?: T;
+        canonicalDomain?: T;
       };
   updatedAt?: T;
   createdAt?: T;

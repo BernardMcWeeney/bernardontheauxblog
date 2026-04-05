@@ -110,6 +110,7 @@ export default async function PlaylistsPage() {
                 label="Playlist"
                 cover={coverUrl}
                 pillClass="pill-playlist"
+                square
               />
             </div>
           )

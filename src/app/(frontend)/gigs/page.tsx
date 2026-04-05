@@ -150,6 +150,7 @@ export default async function GigsPage() {
                 label="Gig"
                 cover={coverUrl}
                 pillClass="pill-gig"
+                square
               />
             </div>
           )

@@ -51,6 +51,7 @@ export default async function DeepDivesPage() {
             label="Deep Dive"
             cover={getCoverUrl(d.cover)}
             pillClass="pill-dive"
+            square
           />
         ))}
       </div>
