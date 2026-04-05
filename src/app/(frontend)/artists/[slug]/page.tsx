@@ -300,6 +300,7 @@ export default async function ArtistDetailPage({
                   label="Gig"
                   cover={getCoverUrl(entry.cover)}
                   pillClass="pill-gig"
+                  square
                 />
               ))}
             </div>
@@ -328,6 +329,7 @@ export default async function ArtistDetailPage({
                   label="Note"
                   cover={getCoverUrl(entry.cover)}
                   pillClass="pill-note"
+                  square
                 />
               ))}
             </div>

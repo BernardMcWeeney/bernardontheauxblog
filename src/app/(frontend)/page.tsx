@@ -420,6 +420,7 @@ export default async function HomePage() {
               label="Gig"
               cover={getCoverUrl(latestGig.cover)}
               pillClass="pill-gig"
+              square
             />
           )}
           {latestDeepDive && (
@@ -431,6 +432,7 @@ export default async function HomePage() {
               label="Deep Dive"
               cover={getCoverUrl(latestDeepDive.cover)}
               pillClass="pill-dive"
+              square
             />
           )}
           {latestPlaylist && (
@@ -442,6 +444,7 @@ export default async function HomePage() {
               label="Playlist"
               cover={getCoverUrl(latestPlaylist.cover)}
               pillClass="pill-playlist"
+              square
             />
           )}
           {latestNote && (
@@ -453,6 +456,7 @@ export default async function HomePage() {
               label="Note"
               cover={getCoverUrl(latestNote.cover)}
               pillClass="pill-note"
+              square
             />
           )}
         </div>

@@ -162,6 +162,7 @@ export default async function TagDetailPage({
             cover={post.coverUrl}
             rating={post.rating}
             pillClass={PILL_CLASS[post.collection]}
+            square
           />
         ))}
       </div>
