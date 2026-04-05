@@ -14,6 +14,11 @@ export function cfImageUrl(
   if (typeof window !== 'undefined' && window.location.hostname === 'localhost') return src
   if (process.env.NODE_ENV === 'development') return src
 
+  // Cloudflare Image Resizing does not support AVIF or WebP as input formats.
+  // Return those as-is — they're already optimised and need no transformation.
+  const ext = src.split('?')[0].split('.').pop()?.toLowerCase()
+  if (ext === 'avif' || ext === 'webp') return src
+
   const { width, height, quality = 80, fit = 'cover' } = opts
 
   const params: string[] = ['format=auto', `quality=${quality}`, `fit=${fit}`]
