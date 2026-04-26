@@ -10,6 +10,17 @@ const nextConfig = {
     unoptimized: true,
   },
 
+  async headers() {
+    return [
+      {
+        source: '/api/media/file/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+    ]
+  },
+
   // Your Next.js config here
   webpack: (webpackConfig: any) => {
     webpackConfig.resolve.extensionAlias = {
